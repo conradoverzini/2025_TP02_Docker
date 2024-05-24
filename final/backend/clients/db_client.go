@@ -18,10 +18,11 @@ var (
 )
 
 func init() {
-	dbName := "final"
-	dbUser := "root"
-	dbPassword := "1234"
-	dbHost := "localhost"
+	// DB Connections Parameters
+	dbName := "final"     //Nombre de la base de datos local
+	dbUser := "root"      // Usuario de la base de datos, habitualmente root
+	dbPassword := ""      //Password del root en la instalacion
+	dbHost := "localhost" //Host de la base de datos. Habitualmente 127.0.0.1
 	dbPort := 3306
 
 	connection := fmt.Sprintf(connectionString, dbUser, dbPassword, dbHost, dbPort, dbName)

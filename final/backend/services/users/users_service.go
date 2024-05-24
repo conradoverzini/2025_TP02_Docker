@@ -10,3 +10,11 @@ func Login(user string, password string) users.LoginResponse {
 	}
 
 }
+
+func Resgister() {}
+
+func Permissions() {}
+
+func CoursesList() {}
+
+func Inscription() {}

@@ -1,0 +1,25 @@
+package domain
+
+import "time"
+
+type Course struct {
+	Id           int       `json:"Id"`
+	Title        string    `json:"title"`
+	Description  string    `json:"description"`
+	Category     string    `json:"category"`
+	CreationDate time.Time `json:"creation_date"`
+	lastUpdate   time.Time `json:"last_update"`
+}
+
+type SearchRequest struct {
+	Query string `json:"query"`
+}
+
+type SearchResponse struct {
+	Result []Course `json:"results"`
+}
+
+type SubscribeRequest struct {
+	UserId   int64 `json:"user_id"`
+	CourseId int64 `json:"course_id"`
+}

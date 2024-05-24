@@ -1,8 +1,9 @@
 package users
 
 import (
-	userDomain "backend/domain/users"
+	userDomain "backend/domain"
 	userService "backend/services/users"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,8 +11,25 @@ import (
 
 // controllers es el unico que usa gin
 func Login(c *gin.Context) {
-	var userData userDomain.UserData
-	c.BindJSON(&userData)
-	loginResponse := userService.Login(userData.User, userData.Password)
-	c.JSON(http.StatusOK, loginResponse)
+	var loginRequest userDomain.LoginRequest
+
+	if err := c.ShouldBindJSON(&loginRequest); err != nil {
+		c.JSON(http.StatusBadRequest, userDomain.Result{
+			Message: fmt.Sprintf(("Invalid request: %s"), err.Error()),
+		})
+	}
+
+	token, err := userService.Login(loginRequest.Email, loginRequest.Password)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, userDomain.Result{
+			Message: fmt.Sprintf("Unauthorized login: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, userDomain.LoginResponse{
+		Token: token,
+	})
 }
+
+func Subscription(c *gin.Context) {}

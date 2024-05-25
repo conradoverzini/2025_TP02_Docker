@@ -31,5 +31,3 @@ func Login(c *gin.Context) {
 		Token: token,
 	})
 }
-
-func Subscription(c *gin.Context) {}

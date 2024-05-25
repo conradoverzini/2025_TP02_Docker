@@ -22,7 +22,7 @@ func Login(email string, password string) (string, error) {
 
 	hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
 
-	userDAO, err := clients.SelectUserByEmail(email)
+	userDAO, err := clients.GetUserByEmail(email)
 
 	if err != nil {
 		return "", fmt.Errorf("error getting user from DB: %v", err)

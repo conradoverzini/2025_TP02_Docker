@@ -3,12 +3,12 @@ package domain
 import "time"
 
 type Course struct {
-	Id           int       `json:"Id"`
+	Id           int       `json:"id"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	Category     string    `json:"category"`
 	CreationDate time.Time `json:"creation_date"`
-	lastUpdate   time.Time `json:"last_update"`
+	LastUpdate   time.Time `json:"last_update"`
 }
 
 type SearchRequest struct {

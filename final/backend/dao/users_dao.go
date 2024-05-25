@@ -10,5 +10,5 @@ type User struct {
 	PasswordHash string    `gorm:"type:varchar(100);not null"`
 	Type         bool      `gorm:"not null;default:true"`
 	CreationDate time.Time `gorm:"autoCreateTime"`
-	lastUpdate   time.Time `gorm:"autoUpdateTime"`
+	LastUpdate   time.Time `gorm:"autoUpdateTime"`
 }

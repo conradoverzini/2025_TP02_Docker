@@ -12,6 +12,6 @@ func MapRoutes(engine *gin.Engine) {
 	engine.POST("/users/login", users.Login) //primer parametro la url y como segundo la funcion del controlador
 	engine.POST("/courses/search", courses.Search)
 	engine.GET("/courses/:id", courses.Get)
-	engine.POST("/subscriptions", users.Subscription)
+	engine.POST("/subscriptions", courses.Subscription)
 
 }

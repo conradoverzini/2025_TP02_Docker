@@ -8,7 +8,3 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Token string `json:"token"`
 }
-
-type Result struct {
-	Message string `json:"message"`
-}

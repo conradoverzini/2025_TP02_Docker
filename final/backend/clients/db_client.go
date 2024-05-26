@@ -37,9 +37,44 @@ func init() {
 
 func StartDB() {
 	var user dao.User
-	if err := DBClient.AutoMigrate(&user); err != nil {
+	var course dao.Course
+	var subscription dao.Subscription
+	if err := DBClient.AutoMigrate(&user, &course, &subscription); err != nil {
 		panic(fmt.Errorf("error creating entities: %v", err))
 	}
+}
+
+func CreateUser(user dao.User) error {
+	var existingUser dao.User
+
+	result := DBClient.Where("Email = ?", user.Email).First(&existingUser)
+
+	if result.Error == nil {
+		return fmt.Errorf("user with email %s already exists", user.Email)
+	}
+
+	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
+		return fmt.Errorf("error checking for existing user for email %s", user.Email)
+	}
+
+	result = DBClient.Where("Nickname = ?", user.Nickname).First(&existingUser)
+
+	if result.Error == nil {
+		return fmt.Errorf("user with nickname %s already exists", user.Nickname)
+	}
+
+	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
+		return fmt.Errorf("error checking for existing user for nickname %s", user.Nickname)
+	}
+
+	result = DBClient.Create(&user)
+	if result.Error != nil {
+		return fmt.Errorf("error creating user for nickname %s and email %s", user.Nickname, user.Email)
+	}
+
+	log.Debug("User created: ", user)
+	return nil
+
 }
 
 func GetUserById(ID int64) (dao.User, error) {

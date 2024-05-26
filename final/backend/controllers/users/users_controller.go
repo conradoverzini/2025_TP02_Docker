@@ -31,3 +31,14 @@ func Login(c *gin.Context) {
 		Token: token,
 	})
 }
+
+func UserRegister(c *gin.Context) {
+	var registrationRequest userDomain.RegistrationRequest
+
+	if err := c.ShouldBindJSON(&registrationRequest); err != nil {
+		c.JSON(http.StatusBadRequest, userDomain.Result{
+			Message: fmt.Sprintf(("Invalid request: %s"), err.Error()),
+		})
+	}
+
+}

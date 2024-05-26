@@ -6,9 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	jwt "github.com/golang-jwt/jwt"
 )
 
 //service no usa gin
+
+var jwtKey = []byte("secret_key")
 
 func Login(email string, password string) (string, error) {
 
@@ -22,17 +26,28 @@ func Login(email string, password string) (string, error) {
 
 	hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
 
-	userDAO, err := clients.GetUserByEmail(email)
-
+	user, err := clients.GetUserByEmail(email)
 	if err != nil {
 		return "", fmt.Errorf("error getting user from DB: %v", err)
 	}
 
-	if hash != userDAO.PasswordHash {
-		return "", fmt.Errorf("invalid credentials")
+	if hash != user.PasswordHash {
+		return "", errors.New("invalid credentials")
 	}
 
-	token := hash
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userID": user.Id,
+	})
 
-	return token, nil
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", fmt.Errorf("error signing JWT: %v", err)
+	}
+
+	return tokenString, nil
+}
+
+func UserRegister(nickname string, email string, password string) error {
+
+	return nil
 }

@@ -41,4 +41,15 @@ func UserRegister(c *gin.Context) {
 		})
 	}
 
+	err := userService.UserRegister(registrationRequest.Nickname, registrationRequest.Email, registrationRequest.Password, registrationRequest.Type)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, userDomain.Result{
+			Message: fmt.Sprintf("Unauthorized login: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, userDomain.Result{
+		Message: fmt.Sprintf("Successful creation of user %s ", registrationRequest.Nickname),
+	})
 }

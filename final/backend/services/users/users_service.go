@@ -2,6 +2,7 @@ package users
 
 import (
 	"backend/clients"
+	"backend/dao"
 	"crypto/md5"
 	"errors"
 	"fmt"
@@ -47,7 +48,31 @@ func Login(email string, password string) (string, error) {
 	return tokenString, nil
 }
 
-func UserRegister(nickname string, email string, password string) error {
+func UserRegister(nickname string, email string, password string, typeUser bool) error {
+
+	if strings.TrimSpace(nickname) == "" {
+		return errors.New("nickname is required")
+	}
+
+	if strings.TrimSpace(email) == "" {
+		return errors.New("email is required")
+	}
+
+	if strings.TrimSpace(password) == "" {
+		return errors.New("password is required")
+	}
+
+	NewUser := dao.User{
+		Nickname:     nickname,
+		Email:        email,
+		PasswordHash: password,
+		Type:         typeUser,
+	}
+
+	err := clients.CreateUser(NewUser)
+	if err != nil {
+		return fmt.Errorf("error creating user from DB: %v", err)
+	}
 
 	return nil
 }

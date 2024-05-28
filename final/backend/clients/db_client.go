@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	connectionString = "%s:%s@tcp(%s:%d)/:%s?charset=utf8&parseTime=True"
+	connectionString = "%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True"
 )
 
 var (
@@ -80,7 +80,7 @@ func CreateUser(user dao.User) error {
 func GetUserById(ID int64) (dao.User, error) {
 	var user dao.User
 
-	result := DBClient.Where("Id = ?", ID).First(&user)
+	result := DBClient.Where("id = ?", ID).First(&user)
 
 	if result.Error != nil {
 		return user, fmt.Errorf("not found user with ID: %d", ID)
@@ -93,7 +93,7 @@ func GetUserById(ID int64) (dao.User, error) {
 func GetUserByEmail(email string) (dao.User, error) {
 	var user dao.User
 
-	result := DBClient.Where("Email = ?", email).First(&user)
+	result := DBClient.Where("email = ?", email).First(&user)
 
 	if result.Error != nil {
 		return user, fmt.Errorf("not found user with email: %s", email)
@@ -106,7 +106,7 @@ func GetUserByEmail(email string) (dao.User, error) {
 func GetCourseById(ID int64) (dao.Course, error) {
 	var course dao.Course
 
-	result := DBClient.Where("Id = ?", ID).First(&course)
+	result := DBClient.Where("id = ?", ID).First(&course)
 
 	if result.Error != nil {
 		return course, fmt.Errorf("not found course with ID: %d", ID)

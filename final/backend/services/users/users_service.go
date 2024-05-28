@@ -62,10 +62,12 @@ func UserRegister(nickname string, email string, password string, typeUser bool)
 		return errors.New("password is required")
 	}
 
+	hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
+
 	NewUser := dao.User{
 		Nickname:     nickname,
 		Email:        email,
-		PasswordHash: password,
+		PasswordHash: hash,
 		Type:         typeUser,
 	}
 

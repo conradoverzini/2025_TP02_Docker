@@ -25,6 +25,7 @@ func Search(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, courseDomain.Result{
 			Message: fmt.Sprintf("Error in Search: %s", err.Error()),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, courseDomain.SearchResponse{

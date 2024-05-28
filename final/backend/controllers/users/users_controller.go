@@ -17,6 +17,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, userDomain.Result{
 			Message: fmt.Sprintf(("Invalid request: %s"), err.Error()),
 		})
+		return
 	}
 
 	token, err := userService.Login(loginRequest.Email, loginRequest.Password)
@@ -39,12 +40,13 @@ func UserRegister(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, userDomain.Result{
 			Message: fmt.Sprintf(("Invalid request: %s"), err.Error()),
 		})
+		return
 	}
 
 	err := userService.UserRegister(registrationRequest.Nickname, registrationRequest.Email, registrationRequest.Password, registrationRequest.Type)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, userDomain.Result{
-			Message: fmt.Sprintf("Unauthorized login: %s", err.Error()),
+		c.JSON(http.StatusConflict, userDomain.Result{
+			Message: fmt.Sprintf("Error in registration: %s", err.Error()),
 		})
 		return
 	}

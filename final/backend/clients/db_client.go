@@ -155,3 +155,19 @@ func InsertSubscription(userID int64, courseID int64) error {
 	return nil
 
 }
+
+func UpdateUser(user dao.User) error {
+	return nil
+}
+
+func DeleteCourseById(courseID int64) error {
+	return nil
+}
+
+func CreateCourse(course dao.Course) error {
+	return nil
+}
+
+func UpdateCourse(course dao.Course) error {
+	return nil
+}

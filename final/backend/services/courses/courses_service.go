@@ -66,3 +66,15 @@ func Subscription(userID int64, courseID int64) error {
 
 	return nil
 }
+
+func CreateCourse(Title string, Description string, Category string) (domain.Result, error) {
+	return domain.Result{}, nil
+}
+
+func UpdateCorse(Title string, Description string, Category string) error {
+	return nil
+}
+
+func DeleteCourse(courseID int64) (domain.Result, error) {
+	return domain.Result{}, nil
+}

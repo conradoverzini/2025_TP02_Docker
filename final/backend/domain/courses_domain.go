@@ -23,3 +23,9 @@ type SubscribeRequest struct {
 	UserId   int64 `json:"user_id"`
 	CourseId int64 `json:"course_id"`
 }
+
+type CourseRequest struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Category    string `json:"category"`
+}

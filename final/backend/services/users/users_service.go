@@ -78,3 +78,7 @@ func UserRegister(nickname string, email string, password string, typeUser bool)
 
 	return nil
 }
+
+func UserUpdate(nickname string, email string, password string) error {
+	return nil
+}

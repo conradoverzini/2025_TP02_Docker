@@ -14,6 +14,10 @@ func MapRoutes(engine *gin.Engine) {
 	engine.POST("/courses/search", courses.Search)
 	engine.GET("/courses/:id", courses.Get)
 	engine.POST("/subscriptions", courses.Subscription)
+	engine.PUT("/users/update/:id")
+	engine.POST("/courses/create")
+	engine.PUT("/courses/update/:id")
+	engine.DELETE("/courses/delete/:id")
 	//actualizar usuario
 	//crear curso
 	//actualizar curso

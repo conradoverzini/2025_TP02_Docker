@@ -15,3 +15,9 @@ type RegistrationRequest struct {
 	Password string `json:"password"`
 	Type     bool   `json:"type"`
 }
+
+type UpdateUserRequest struct {
+	Nickname string `json:"nickname"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

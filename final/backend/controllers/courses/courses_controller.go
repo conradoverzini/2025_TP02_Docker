@@ -80,3 +80,9 @@ func Subscription(c *gin.Context) {
 	})
 
 }
+
+func CreateCourse(c *gin.Context) {}
+
+func UpdateCorse(c *gin.Context) {}
+
+func DeleteCourse(c *gin.Context) {}

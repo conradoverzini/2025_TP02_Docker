@@ -2,19 +2,21 @@ package courses
 
 import (
 	"backend/clients"
+	"backend/dao"
 	"backend/domain"
 
+	"errors"
 	"fmt"
 	"strings"
 )
 
-func Search(query string) ([]domain.Course, error) {
+func SearchCourse(query string) ([]domain.Course, error) {
 	trimmed := strings.TrimSpace(query)
 
 	courses, err := clients.GetCoursewithFilter(trimmed)
 
 	if err != nil {
-		return nil, fmt.Errorf("Error getting courses from DB: %s", err)
+		return nil, fmt.Errorf("error getting courses from DB: %s", err)
 	}
 
 	results := make([]domain.Course, 0)
@@ -33,11 +35,11 @@ func Search(query string) ([]domain.Course, error) {
 	return results, nil
 }
 
-func Get(ID int64) (domain.Course, error) {
+func GetCourse(ID int64) (domain.Course, error) {
 	course, err := clients.GetCourseById(ID)
 
 	if err != nil {
-		return domain.Course{}, fmt.Errorf("Error getting course from DB: %v", err)
+		return domain.Course{}, fmt.Errorf("error getting course from DB: %v", err)
 	}
 
 	return domain.Course{
@@ -67,14 +69,70 @@ func Subscription(userID int64, courseID int64) error {
 	return nil
 }
 
-func CreateCourse(Title string, Description string, Category string) (domain.Result, error) {
-	return domain.Result{}, nil
-}
+func CreateCourse(title string, description string, category string) error {
 
-func UpdateCorse(Title string, Description string, Category string) error {
+	if strings.TrimSpace(title) == "" {
+		return errors.New("title is required")
+	}
+
+	if strings.TrimSpace(description) == "" {
+		return errors.New("description is required")
+	}
+
+	if strings.TrimSpace(category) == "" {
+		return errors.New("category is required")
+	}
+
+	NewCourse := dao.Course{
+		Title:       title,
+		Description: description,
+		Category:    category,
+	}
+
+	err := clients.CreateCourse(NewCourse)
+	if err != nil {
+		return fmt.Errorf("error creating course from DB: %v", err)
+	}
+
 	return nil
 }
 
-func DeleteCourse(courseID int64) (domain.Result, error) {
-	return domain.Result{}, nil
+func UpdateCourse(courseID int64, title string, description string, category string) error {
+
+	if strings.TrimSpace(title) == "" {
+		return errors.New("title is required")
+	}
+
+	if strings.TrimSpace(description) == "" {
+		return errors.New("description is required")
+	}
+
+	if strings.TrimSpace(category) == "" {
+		return errors.New("category is required")
+	}
+
+	courseUpdate := dao.Course{
+		Title:       title,
+		Description: description,
+		Category:    category,
+	}
+
+	err := clients.UpdateCourse(courseID, courseUpdate)
+	if err != nil {
+		return fmt.Errorf("error updating course from DB: %v", err)
+	}
+	return nil
+}
+
+func DeleteCourse(courseID int64) error {
+
+	if err := clients.DeleteCourseById(courseID); err != nil {
+		return fmt.Errorf("error deleting course in DB: %v", err)
+	}
+
+	if err := clients.DeleteSubscriptionById(courseID); err != nil {
+		return fmt.Errorf("error deleting subscriptcion in DB: %v", err)
+	}
+
+	return nil
 }

@@ -11,16 +11,10 @@ func MapRoutes(engine *gin.Engine) {
 	//funcion que levanta toda la aplicacion
 	engine.POST("/users/login", users.Login) //primer parametro la url y como segundo la funcion del controlador
 	engine.POST("/users/register", users.UserRegister)
-	engine.POST("/courses/search", courses.Search)
-	engine.GET("/courses/:id", courses.Get)
+	engine.POST("/courses/search", courses.SearchCourse)
+	engine.GET("/courses/:id", courses.GetCourse)
 	engine.POST("/subscriptions", courses.Subscription)
-	engine.PUT("/users/update/:id")
-	engine.POST("/courses/create")
-	engine.PUT("/courses/update/:id")
-	engine.DELETE("/courses/delete/:id")
-	//actualizar usuario
-	//crear curso
-	//actualizar curso
-	//borrar curso
-
+	engine.POST("/courses/create", courses.CreateCourse)
+	engine.PUT("/courses/update/:id", courses.UpdateCorse)
+	engine.DELETE("/courses/delete/:id", courses.DeleteCourse)
 }

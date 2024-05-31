@@ -55,5 +55,3 @@ func UserRegister(c *gin.Context) {
 		Message: fmt.Sprintf("Successful creation of user %s ", registrationRequest.Nickname),
 	})
 }
-
-func UserUpdate(c *gin.Context) {}

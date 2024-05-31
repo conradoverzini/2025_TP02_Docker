@@ -44,35 +44,35 @@ func StartDB() {
 	}
 }
 
-func CreateUser(user dao.User) error {
-	var existingUser dao.User
+func CreateUser(NewUser dao.User) error {
+	var user dao.User
 
-	result := DBClient.Where("Email = ?", user.Email).First(&existingUser)
+	result := DBClient.Where("Email = ?", NewUser.Email).First(&user)
 
 	if result.Error == nil {
-		return fmt.Errorf("user with email %s already exists", user.Email)
+		return fmt.Errorf("user with email %s already exists", NewUser.Email)
 	}
 
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
-		return fmt.Errorf("error checking for existing user for email %s", user.Email)
+		return fmt.Errorf("error checking for existing user for email %s", NewUser.Email)
 	}
 
-	result = DBClient.Where("Nickname = ?", user.Nickname).First(&existingUser)
+	result = DBClient.Where("Nickname = ?", NewUser.Nickname).First(&user)
 
 	if result.Error == nil {
-		return fmt.Errorf("user with nickname %s already exists", user.Nickname)
+		return fmt.Errorf("user with nickname %s already exists", NewUser.Nickname)
 	}
 
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
-		return fmt.Errorf("error checking for existing user for nickname %s", user.Nickname)
+		return fmt.Errorf("error checking for existing user for nickname %s", NewUser.Nickname)
 	}
 
-	result = DBClient.Create(&user)
+	result = DBClient.Create(&NewUser)
 	if result.Error != nil {
-		return fmt.Errorf("error creating user for nickname %s and email %s", user.Nickname, user.Email)
+		return fmt.Errorf("error creating user for nickname %s and email %s", NewUser.Nickname, NewUser.Email)
 	}
 
-	log.Debug("User created: ", user)
+	log.Debug("User created: ", NewUser)
 	return nil
 
 }
@@ -129,9 +129,9 @@ func GetCoursewithFilter(query string) ([]dao.Course, error) {
 }
 
 func InsertSubscription(userID int64, courseID int64) error {
-	var existingSubscription dao.Subscription
+	var subscription dao.Subscription
 
-	result := DBClient.Where("user_id = ? AND course_id = ?", userID, courseID).First(&existingSubscription)
+	result := DBClient.Where("user_id = ? AND course_id = ?", userID, courseID).First(&subscription)
 
 	if result.Error == nil {
 		return fmt.Errorf("subscription already exists for user %d and course %d", userID, courseID)
@@ -141,33 +141,102 @@ func InsertSubscription(userID int64, courseID int64) error {
 		return fmt.Errorf("error checking for existing subscription for user %d and course %d", userID, courseID)
 	}
 
-	subscription := dao.Subscription{
+	NewSubscription := dao.Subscription{
 		User_Id:   userID,
 		Course_Id: courseID,
 	}
 
-	result = DBClient.Create(&subscription)
+	result = DBClient.Create(&NewSubscription)
 	if result.Error != nil {
 		return fmt.Errorf("error inserting subscription for user %d and course %d", userID, courseID)
 	}
 
-	log.Debug("Subscription created: ", subscription)
+	log.Debug("Subscription created: ", NewSubscription)
 	return nil
 
-}
-
-func UpdateUser(user dao.User) error {
-	return nil
 }
 
 func DeleteCourseById(courseID int64) error {
+	var course dao.Course
+
+	result := DBClient.Where("id = ?", courseID).First(&course)
+
+	if result.Error != nil {
+		return fmt.Errorf("not found course with ID: %d", courseID)
+	}
+
+	result = DBClient.Delete(&course)
+	if result.Error != nil {
+		return fmt.Errorf("error deleting course for ID: %d", courseID)
+	}
+
+	log.Debug("Course Deleted: ", course)
 	return nil
 }
 
-func CreateCourse(course dao.Course) error {
+func DeleteSubscriptionById(courseID int64) error {
+	var subscription dao.Subscription
+
+	result := DBClient.Where("course_id = ?", courseID).First(&subscription)
+	if result.Error != nil {
+		return fmt.Errorf("not found course with ID: %d", courseID)
+	}
+
+	for {
+		result = DBClient.Delete(&subscription)
+		if result.Error != nil {
+			return fmt.Errorf("error deleting subscription for course ID: %d", courseID)
+		}
+		log.Debug("Subscription Deleted: ", subscription)
+
+		result = DBClient.Where("course_id = ?", courseID).First(&subscription)
+		if result.Error != nil {
+			break
+		}
+	}
+
 	return nil
 }
 
-func UpdateCourse(course dao.Course) error {
+func CreateCourse(NewCourse dao.Course) error {
+	var course dao.Course
+
+	result := DBClient.Where("Title = ?", NewCourse.Title).First(&course)
+
+	if result.Error == nil {
+		return fmt.Errorf("course with title %s already exists", NewCourse.Title)
+	}
+
+	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
+		return fmt.Errorf("error checking for existing course for title %s", NewCourse.Title)
+	}
+
+	result = DBClient.Create(&NewCourse)
+	if result.Error != nil {
+		return fmt.Errorf("error creating course for title: %s", NewCourse.Title)
+	}
+
+	log.Debug("Course created: ", NewCourse)
+	return nil
+}
+
+func UpdateCourse(courseID int64, courseUpdate dao.Course) error {
+	var course dao.Course
+
+	result := DBClient.Where("id = ?", courseID).First(&course)
+	if result.Error != nil {
+		return fmt.Errorf("not found course with ID: %d", courseID)
+	}
+
+	course.Title = courseUpdate.Title
+	course.Description = courseUpdate.Description
+	course.Category = courseUpdate.Category
+
+	result = DBClient.Save(&course)
+	if result.Error != nil {
+		return fmt.Errorf("error updating course with ID:  %d", course.Id)
+	}
+
+	log.Debug("Course updated: ", course)
 	return nil
 }

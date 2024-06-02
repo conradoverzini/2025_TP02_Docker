@@ -21,3 +21,7 @@ type UpdateUserRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type ListResponse struct {
+	Result []Course `json:"results"`
+}

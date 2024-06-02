@@ -4,6 +4,7 @@ import (
 	"backend/clients"
 	"backend/dao"
 	"backend/domain"
+	"time"
 
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ import (
 func SearchCourse(query string) ([]domain.Course, error) {
 	trimmed := strings.TrimSpace(query)
 
-	courses, err := clients.GetCoursewithFilter(trimmed)
+	courses, err := clients.GetCoursewithQuery(trimmed)
 
 	if err != nil {
 		return nil, fmt.Errorf("error getting courses from DB: %s", err)
@@ -27,6 +28,9 @@ func SearchCourse(query string) ([]domain.Course, error) {
 			Title:        course.Title,
 			Description:  course.Description,
 			Category:     course.Category,
+			Instructor:   course.Instructor,
+			Duration:     course.Duration,
+			Requirement:  course.Requirement,
 			CreationDate: course.CreationDate,
 			LastUpdate:   course.LastUpdate,
 		})
@@ -47,6 +51,9 @@ func GetCourse(ID int64) (domain.Course, error) {
 		Title:        course.Title,
 		Description:  course.Description,
 		Category:     course.Category,
+		Instructor:   course.Instructor,
+		Duration:     course.Duration,
+		Requirement:  course.Requirement,
 		CreationDate: course.CreationDate,
 		LastUpdate:   course.LastUpdate,
 	}, nil
@@ -69,7 +76,7 @@ func Subscription(userID int64, courseID int64) error {
 	return nil
 }
 
-func CreateCourse(title string, description string, category string) error {
+func CreateCourse(title string, description string, category string, instructor string, duration int64, requirement string) error {
 
 	if strings.TrimSpace(title) == "" {
 		return errors.New("title is required")
@@ -83,10 +90,27 @@ func CreateCourse(title string, description string, category string) error {
 		return errors.New("category is required")
 	}
 
+	if strings.TrimSpace(instructor) == "" {
+		return errors.New("instructor is required")
+	}
+
+	if duration == 0 {
+		return errors.New("duration is required")
+	}
+
+	if strings.TrimSpace(requirement) == "" {
+		return errors.New("requirement is required")
+	}
+
 	NewCourse := dao.Course{
-		Title:       title,
-		Description: description,
-		Category:    category,
+		Title:        title,
+		Description:  description,
+		Category:     category,
+		Instructor:   instructor,
+		Duration:     duration,
+		Requirement:  requirement,
+		CreationDate: time.Now(),
+		LastUpdate:   time.Now(),
 	}
 
 	err := clients.CreateCourse(NewCourse)
@@ -97,7 +121,7 @@ func CreateCourse(title string, description string, category string) error {
 	return nil
 }
 
-func UpdateCourse(courseID int64, title string, description string, category string) error {
+func UpdateCourse(courseID int64, title string, description string, category string, instructor string, duration int64, requirement string) error {
 
 	if strings.TrimSpace(title) == "" {
 		return errors.New("title is required")
@@ -111,10 +135,25 @@ func UpdateCourse(courseID int64, title string, description string, category str
 		return errors.New("category is required")
 	}
 
+	if strings.TrimSpace(instructor) == "" {
+		return errors.New("instructor is required")
+	}
+
+	if duration == 0 {
+		return errors.New("duration is required")
+	}
+
+	if strings.TrimSpace(requirement) == "" {
+		return errors.New("requirement is required")
+	}
+
 	courseUpdate := dao.Course{
 		Title:       title,
 		Description: description,
 		Category:    category,
+		Instructor:  instructor,
+		Duration:    duration,
+		Requirement: requirement,
 	}
 
 	err := clients.UpdateCourse(courseID, courseUpdate)

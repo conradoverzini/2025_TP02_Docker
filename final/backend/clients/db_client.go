@@ -20,10 +20,10 @@ var (
 
 func init() {
 	// DB Connections Parameters
-	dbName := "final"     //Nombre de la base de datos local
-	dbUser := "root"      // Usuario de la base de datos, habitualmente root
-	dbPassword := ""      //Password del root en la instalacion
-	dbHost := "localhost" //Host de la base de datos. Habitualmente 127.0.0.1
+	dbName := "final"         //Nombre de la base de datos local
+	dbUser := "root"          //Usuario de la base de datos, habitualmente root
+	dbPassword := "jsjdm5712" //Password del root en la instalacion
+	dbHost := "localhost"     //Host de la base de datos. Habitualmente 127.0.0.1
 	dbPort := 3306
 
 	connection := fmt.Sprintf(connectionString, dbUser, dbPassword, dbHost, dbPort, dbName)
@@ -116,16 +116,32 @@ func GetCourseById(ID int64) (dao.Course, error) {
 	return course, nil
 }
 
-func GetCoursewithFilter(query string) ([]dao.Course, error) {
+func GetCoursewithQuery(query string) ([]dao.Course, error) {
 	var courses []dao.Course
 
-	result := DBClient.Where("title LIKE ? OR description LIKE ? OR category LIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%").Find(&courses)
+	result := DBClient.Where("title LIKE ? OR description LIKE ? OR category LIKE ? OR requirement LIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%", "%"+query+"%").Find(&courses)
 
 	if result.Error != nil {
 		return nil, fmt.Errorf("not found course with filter: %s", query)
 	}
 
 	return courses, nil
+}
+
+func GetCourseIdsByUserId(userID int64) ([]int64, error) {
+	var subscriptions []dao.Subscription
+	var courseIDs []int64
+
+	result := DBClient.Where("user_id = ?", userID).Find(&subscriptions)
+	if result.Error != nil {
+		return nil, fmt.Errorf("error finding subscriptions for user ID: %d, %v", userID, result.Error)
+	}
+
+	for _, subscription := range subscriptions {
+		courseIDs = append(courseIDs, subscription.Course_Id)
+	}
+
+	return courseIDs, nil
 }
 
 func InsertSubscription(userID int64, courseID int64) error {
@@ -177,22 +193,10 @@ func DeleteCourseById(courseID int64) error {
 func DeleteSubscriptionById(courseID int64) error {
 	var subscription dao.Subscription
 
-	result := DBClient.Where("course_id = ?", courseID).First(&subscription)
-	if result.Error != nil {
-		return fmt.Errorf("not found course with ID: %d", courseID)
-	}
+	result := DBClient.Where("course_id = ?", courseID).Delete(&subscription)
 
-	for {
-		result = DBClient.Delete(&subscription)
-		if result.Error != nil {
-			return fmt.Errorf("error deleting subscription for course ID: %d", courseID)
-		}
-		log.Debug("Subscription Deleted: ", subscription)
-
-		result = DBClient.Where("course_id = ?", courseID).First(&subscription)
-		if result.Error != nil {
-			break
-		}
+	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
+		return fmt.Errorf("error deleting course with id %d in subscription table", courseID)
 	}
 
 	return nil
@@ -231,6 +235,9 @@ func UpdateCourse(courseID int64, courseUpdate dao.Course) error {
 	course.Title = courseUpdate.Title
 	course.Description = courseUpdate.Description
 	course.Category = courseUpdate.Category
+	course.Duration = courseUpdate.Duration
+	course.Instructor = courseUpdate.Instructor
+	course.Requirement = courseUpdate.Requirement
 
 	result = DBClient.Save(&course)
 	if result.Error != nil {

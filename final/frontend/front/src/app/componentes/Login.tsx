@@ -2,64 +2,63 @@ import React from 'react';
 
 function Login() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-800">
-      <div className="max-w-lg w-full">
-        <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)">
-          <div className="p-8">
-            <h2 className="text-center text-3xl font-extrabold text-white">
-              Bienvenido de vuelta!
-            </h2>
-            <p className="mt-4 text-center text-gray-400">Ingresa para continuar</p>
-            <form method="POST" action="#" className="mt-8 space-y-6">
-              <div className="rounded-md shadow-sm">
-                <div>
-                  <label className="sr-only" htmlFor="usuario">Usuario</label>
-                  <input
-                    placeholder="Usuario"
-                    className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    required={true}
-                    autoComplete="user"
-                    type="user"
-                    name="user"
-                    id="user"
-                  />
-                </div>
-                <div className="mt-4">
-                  <label className="sr-only" htmlFor="password">Contrasenia</label>
-                  <input
-                    placeholder="Contrasenia"
-                    className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    required={true}
-                    autoComplete="current-password"
-                    type="password"
-                    name="password"
-                    id="password"
-                  />
-                </div>
-              </div>
+    <div className="max-w-lg w-full">
+  <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" >
+    <div className="p-8">
+      <h2 className="text-center text-3xl font-extrabold text-white">
+        Bienvenido de vuelta!
+      </h2>
+      <p className="mt-4 text-center text-gray-400">Ingresa para continuar</p>
+      <form method="POST" action="#" className="mt-8 space-y-6">
+        <div className="rounded-md shadow-sm">
+          <div>
+            <label className="sr-only" htmlFor="email">Usuario</label>
+            <input
+              placeholder="Email address"
+              className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              required={true}
+              autoComplete="email"
+              type="email"
+              name="email"
+              id="email"
+            />
+          </div>
+          <div className="mt-4">
+            <label className="sr-only" htmlFor="password">Contrasenia</label>
+            <input
+              placeholder="Password"
+              className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              required={true}
+              autoComplete="current-password"
+              type="password"
+              name="password"
+              id="password"
+            />
+          </div>
+        </div>
 
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center">
-                  <input
-                    className="h-4 w-4 text-indigo-500 focus:ring-indigo-400 border-gray-600 rounded"
-                    type="checkbox"
-                    name="remember-me"
-                    id="remember-me"
-                  />
-                  <label className="ml-2 block text-sm text-gray-400" htmlFor="remember-me">
-                    Recordame
-                  </label>
-                </div>
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center">
+            <input
+              className="h-4 w-4 text-indigo-500 focus:ring-indigo-400 border-gray-600 rounded"
+              type="checkbox"
+              name="remember-me"
+              id="remember-me"
+            />
+            <label className="ml-2 block text-sm text-gray-400" htmlFor="remember-me">
+                Recordame
+              </label>
+          </div>
 
-                <div className="text-sm">
-                  <a
-                    className="font-medium text-indigo-500 hover:text-indigo-400"
-                    href="#"
-                  >
-                    Olvidaste tu contrasenia?
-                  </a>
-                </div>
-              </div>
+          <div className="text-sm">
+            <a
+              className="font-medium text-indigo-500 hover:text-indigo-400"
+              href="#"
+            >
+              Olvidaste tu contrasenia?
+            </a>
+          </div>
+        </div>
 
               <div>
                 <button

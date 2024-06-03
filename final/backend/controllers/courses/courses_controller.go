@@ -91,7 +91,7 @@ func CreateCourse(c *gin.Context) {
 		return
 	}
 
-	if err := courseService.CreateCourse(courseRequest.Title, courseRequest.Description, courseRequest.Category); err != nil {
+	if err := courseService.CreateCourse(courseRequest.Title, courseRequest.Description, courseRequest.Category, courseRequest.Instructor, courseRequest.Duration, courseRequest.Requirement); err != nil {
 		c.JSON(http.StatusConflict, courseDomain.Result{
 			Message: fmt.Sprintf("error in creating course: %s", err.Error()),
 		})
@@ -121,7 +121,7 @@ func UpdateCorse(c *gin.Context) {
 		return
 	}
 
-	if err := courseService.UpdateCourse(id, updateRequest.Title, updateRequest.Description, updateRequest.Category); err != nil {
+	if err := courseService.UpdateCourse(id, updateRequest.Title, updateRequest.Description, updateRequest.Category, updateRequest.Instructor, updateRequest.Duration, updateRequest.Requirement); err != nil {
 		c.JSON(http.StatusConflict, courseDomain.Result{
 			Message: fmt.Sprintf("error updating: %s", err.Error()),
 		})
@@ -137,6 +137,7 @@ func UpdateCorse(c *gin.Context) {
 func DeleteCourse(c *gin.Context) {
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, courseDomain.Result{
 			Message: fmt.Sprintf("invalid id: %s", err.Error()),

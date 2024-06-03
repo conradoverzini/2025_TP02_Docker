@@ -3,8 +3,8 @@ import Login from "./componentes/Login";
 
 export default function Home() {
   return (
-   <div>
-    <Login/>
-   </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <Login />
+    </div>
   );
 }

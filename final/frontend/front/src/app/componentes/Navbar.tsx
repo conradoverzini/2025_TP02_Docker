@@ -17,7 +17,6 @@ function Navbar() {
             />
           </Link>
         </div>
-        {/* Buscador centrado */}
         <div className="flex-1 mx-4 flex justify-center">
           <Search />
         </div>

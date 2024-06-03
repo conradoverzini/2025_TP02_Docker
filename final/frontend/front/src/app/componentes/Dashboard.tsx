@@ -1,4 +1,6 @@
-
+import React from "react";
+import { faHouse, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Topbar({
     open,

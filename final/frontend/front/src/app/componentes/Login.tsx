@@ -24,9 +24,9 @@ function Login() {
             />
           </div>
           <div className="mt-4">
-            <label className="sr-only" htmlFor="password">Contrasenia</label>
+            <label className="sr-only" htmlFor="password">Contraseña</label>
             <input
-              placeholder="Contrasenia"
+              placeholder="Contraseña"
               className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               required={true}
               autoComplete="current-password"
@@ -34,29 +34,6 @@ function Login() {
               name="password"
               id="password"
             />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center">
-            <input
-              className="h-4 w-4 text-indigo-500 focus:ring-indigo-400 border-gray-600 rounded"
-              type="checkbox"
-              name="remember-me"
-              id="remember-me"
-            />
-            <label className="ml-2 block text-sm text-gray-400" htmlFor="remember-me">
-                Recordame
-              </label>
-          </div>
-
-          <div className="text-sm">
-            <a
-              className="font-medium text-indigo-500 hover:text-indigo-400"
-              href="#"
-            >
-              Olvidaste tu contrasenia?
-            </a>
           </div>
         </div>
 

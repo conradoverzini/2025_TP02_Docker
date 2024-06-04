@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 function Login() {
@@ -38,20 +39,24 @@ function Login() {
         </div>
 
               <div>
+              <Link href="/home" passHref>
                 <button
                   className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  type="submit"
+                  type="button"
                 >
                   Ingresa
                 </button>
+              </Link>
               </div>
             </form>
           </div>
           <div className="px-8 py-4 bg-gray-700 text-center">
-            <span className="text-gray-400">No tenes cuenta? </span>
-            <a className="font-medium text-indigo-500 hover:text-indigo-400" href="#">
-              Crear cuenta nueva
-            </a>
+            <span className="text-gray-400">¿No tienes cuenta? </span>
+            <Link href="/register">
+              <span className="font-medium text-indigo-500 hover:text-indigo-400 cursor-pointer">
+                Crear cuenta nueva
+              </span>
+          </Link>
           </div>
         </div>
       </div>

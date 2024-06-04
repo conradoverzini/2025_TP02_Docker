@@ -10,7 +10,7 @@ function Navbar() {
       <div className="w-full max-w-screen-xl mx-auto flex items-center justify-between">
         {/* Icono a la izquierda */}
         <div className="flex items-center">
-          <Link href={"/dashboard"}>
+          <Link href={"/"}>
             <FontAwesomeIcon 
               icon={faBars} 
               className="text-gray-900 bg-indigo-500 rounded-full p-2" 
@@ -30,4 +30,3 @@ function Navbar() {
 }
 
 export default Navbar;
-

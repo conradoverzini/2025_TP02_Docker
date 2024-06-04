@@ -1,6 +1,4 @@
-"use client"
 import React from 'react';
-import { useState } from 'react';
 
 type CourseProps = {
   title: string;
@@ -18,30 +16,36 @@ const Curso: React.FC<CourseProps> = ({
   instructor,
   duration,
   requirement,
-
-
 }) => {
-    const [courses, setCourses] = useState([]);
-    const [query, setQuery] = useState('');
-    
-  
-
-
   return (
-    <div className="max-w-md mx-auto my-8 bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div className="max-w-md mx-auto my-8 bg-gray-300 rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="md:flex">
-        <div className="p-8">
-          <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{category}</div>
-          <h2 className="block mt-1 text-lg leading-tight font-medium text-black">{title}</h2>
-          <p className="mt-2 text-gray-500">{description}</p>
-          <div className="mt-4">
-            <span className="text-gray-700 font-semibold">Instructor:</span> {instructor}
+        <div className="p-8 w-full">
+          <div className="text-center">
+            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+              {category}
+            </div>
+            <h2 className="block mt-1 text-2xl leading-tight font-medium text-black">
+              {title}
+            </h2>
           </div>
-          <div className="mt-2">
-            <span className="text-gray-700 font-semibold">Duración:</span> {duration} horas
+          <p className="mt-4 text-gray-600 text-center">{description}</p>
+          <div className="mt-4 text-center">
+            <span className="text-gray-700 font-semibold">Instructor:</span>{' '}
+            {instructor}
           </div>
-          <div className="mt-2">
-            <span className="text-gray-700 font-semibold">Requisitos:</span> {requirement}
+          <div className="mt-2 text-center">
+            <span className="text-gray-700 font-semibold">Duración:</span>{' '}
+            {duration} Semanas
+          </div>
+          <div className="mt-2 text-center">
+            <span className="text-gray-700 font-semibold">Requisitos:</span>{' '}
+            {requirement}
+          </div>
+          <div className="flex justify-center mt-6">
+            <button className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded">
+              Inscripción
+            </button>
           </div>
         </div>
       </div>

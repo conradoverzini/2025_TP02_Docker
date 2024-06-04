@@ -12,7 +12,7 @@ function Login() {
       <form method="POST" action="#" className="mt-8 space-y-6">
         <div className="rounded-md shadow-sm">
           <div>
-            <label className="sr-only" htmlFor="email">Usuario</label>
+            <label className="sr-only" htmlFor="email">Email</label>
             <input
               placeholder="Email address"
               className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -26,7 +26,7 @@ function Login() {
           <div className="mt-4">
             <label className="sr-only" htmlFor="password">Contrasenia</label>
             <input
-              placeholder="Password"
+              placeholder="Contrasenia"
               className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               required={true}
               autoComplete="current-password"
@@ -78,7 +78,7 @@ function Login() {
           </div>
         </div>
       </div>
-    </div>
+  
   );
 }
 

@@ -6,24 +6,18 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SearchCourse(c *gin.Context) {
-	var searchRequest courseDomain.SearchRequest
 
-	if err := c.ShouldBindJSON(&searchRequest); err != nil {
-		c.JSON(http.StatusBadRequest, courseDomain.Result{
-			Message: fmt.Sprintf("invalid request: %s", err.Error()),
-		})
-		return
-	}
-
-	results, err := courseService.SearchCourse(searchRequest.Query)
+	query := strings.TrimSpace(c.Query("query"))
+	results, err := courseService.SearchCourse(query)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, courseDomain.Result{
-			Message: fmt.Sprintf("error in search: %s", err.Error()),
+			Message: fmt.Sprintf("Error in search: %s", err.Error()),
 		})
 		return
 	}

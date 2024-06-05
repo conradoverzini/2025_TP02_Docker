@@ -11,7 +11,7 @@ func MapRoutes(engine *gin.Engine) {
 	//funcion que levanta toda la aplicacion
 	engine.POST("/users/login", users.Login) //primer parametro la url y como segundo la funcion del controlador
 	engine.POST("/users/register", users.UserRegister)
-	engine.POST("/courses/search", courses.SearchCourse)
+	engine.GET("/courses/search", courses.SearchCourse)
 	engine.GET("/courses", courses.GetAllCourses)
 	engine.GET("/courses/:id", courses.GetCourse)
 	engine.POST("/subscriptions", courses.Subscription)

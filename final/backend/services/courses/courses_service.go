@@ -12,6 +12,7 @@ import (
 )
 
 func SearchCourse(query string) ([]domain.Course, error) {
+
 	trimmed := strings.TrimSpace(query)
 
 	courses, err := clients.GetCoursewithQuery(trimmed)

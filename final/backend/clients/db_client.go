@@ -96,7 +96,7 @@ func GetCourses() ([]dao.Course, error) {
 	result := DBClient.Find(&courses)
 
 	if result.Error != nil {
-		return nil, fmt.Errorf("Error devolviendo cursos: %s", result.Error)
+		return nil, fmt.Errorf("error retrieving courses: %s", result.Error)
 	}
 
 	return courses, nil

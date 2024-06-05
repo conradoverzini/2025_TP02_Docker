@@ -90,6 +90,18 @@ func GetUserById(ID int64) (dao.User, error) {
 	return user, nil
 }
 
+func GetCourses() ([]dao.Course, error) {
+	var courses []dao.Course
+
+	result := DBClient.Find(&courses)
+
+	if result.Error != nil {
+		return nil, fmt.Errorf("Error devolviendo cursos: %s", result.Error)
+	}
+
+	return courses, nil
+}
+
 func GetUserByEmail(email string) (dao.User, error) {
 	var user dao.User
 

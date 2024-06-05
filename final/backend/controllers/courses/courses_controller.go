@@ -58,6 +58,21 @@ func GetCourse(c *gin.Context) {
 
 }
 
+func GetAllCourses(c *gin.Context) {
+
+	results, err := courseService.GetAllCourses()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, courseDomain.Result{
+			Message: fmt.Sprintf("error in search: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, courseDomain.SearchResponse{
+		Result: results,
+	})
+}
+
 func Subscription(c *gin.Context) {
 	var subscribeRequest courseDomain.SubscribeRequest
 

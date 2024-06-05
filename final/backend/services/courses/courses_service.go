@@ -59,6 +59,32 @@ func GetCourse(ID int64) (domain.Course, error) {
 	}, nil
 }
 
+func GetAllCourses() ([]domain.Course, error) {
+	courses, err := clients.GetCourses()
+
+	if err != nil {
+		return nil, fmt.Errorf("error getting courses from DB: %s", err)
+	}
+
+	results := make([]domain.Course, 0)
+
+	for _, course := range courses {
+		results = append(results, domain.Course{
+			Id:           course.Id,
+			Title:        course.Title,
+			Description:  course.Description,
+			Category:     course.Category,
+			Instructor:   course.Instructor,
+			Duration:     course.Duration,
+			Requirement:  course.Requirement,
+			CreationDate: course.CreationDate,
+			LastUpdate:   course.LastUpdate,
+		})
+	}
+
+	return results, nil
+}
+
 func Subscription(userID int64, courseID int64) error {
 
 	if _, err := clients.GetUserById(userID); err != nil {

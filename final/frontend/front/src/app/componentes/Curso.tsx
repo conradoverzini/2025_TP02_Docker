@@ -1,6 +1,7 @@
 import React from 'react';
 
 type CourseProps = {
+  id: number;
   title: string;
   description: string;
   category: string;
@@ -10,6 +11,7 @@ type CourseProps = {
 };
 
 const Curso: React.FC<CourseProps> = ({
+  id,
   title,
   description,
   category,
@@ -18,7 +20,7 @@ const Curso: React.FC<CourseProps> = ({
   requirement,
 }) => {
   return (
-    <div className="max-w-md mx-auto my-8 bg-gray-300 rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div className="max-w-md mx-auto my-8 bg-gray-300 rounded-xl shadow-md overflow-hidden">
       <div className="md:flex">
         <div className="p-8 w-full">
           <div className="text-center">
@@ -44,7 +46,7 @@ const Curso: React.FC<CourseProps> = ({
           </div>
           <div className="flex justify-center mt-6">
             <button className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded">
-              Inscripción
+              Inscribirse
             </button>
           </div>
         </div>

@@ -19,6 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <title>CURSOS EMARVE</title>
       <body className={inter.className}>{children}</body>
     </html>
   );

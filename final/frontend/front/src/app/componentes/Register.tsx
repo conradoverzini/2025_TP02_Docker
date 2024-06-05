@@ -1,27 +1,56 @@
+"use client"
+import React, { useState } from 'react';
 import Link from 'next/link';
-import React from 'react';
+import { registration } from '../utils/axios'; 
+
 
 function Register() {
-    return (
-        <div className="max-w-lg w-full">
-      <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" >
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isRegistered, setIsRegistered] = useState(false);
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const registrationRequest = {
+        nickname: username,
+        email: email,
+        password: password,
+        type: false
+      };
+      const token = await registration(registrationRequest);
+      console.log("Registration successful, token: ", token);
+      setIsRegistered(true);
+      window.location.href = '/home'; 
+    } catch (error) {
+      console.log(error);
+      setError('Hubo un error al crear la cuenta. Por favor, verifica los datos ingresados.');
+    }
+  };
+
+  return (
+    <div className="max-w-lg w-full">
+      <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
         <div className="p-8">
           <h2 className="text-center text-3xl font-extrabold text-white">
             Crea tu Cuenta!
           </h2>
-          <form method="POST" action="#" className="mt-8 space-y-6">
+          <form onSubmit={handleRegister} className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm">
-                <div>
-                    <label className="sr-only" htmlFor="username">Username</label>
-                    <input
-                    placeholder="Username"
-                    className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    required={true}
-                    autoComplete="username"
-                    type="username"
-                    name="username"
-                    id="username"
-                    />
+              <div>
+                <label className="sr-only" htmlFor="username">Username</label>
+                <input
+                  placeholder="Username"
+                  className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  required={true}
+                  autoComplete="username"
+                  type="text"
+                  name="username"
+                  id="username"
+                  value={username}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                />
               </div>
               <div className="mt-4">
                 <label className="sr-only" htmlFor="email">Email</label>
@@ -33,6 +62,8 @@ function Register() {
                   type="email"
                   name="email"
                   id="email"
+                  value={email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mt-4">
@@ -45,26 +76,33 @@ function Register() {
                   type="password"
                   name="password"
                   id="password"
+                  value={password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 />
               </div>
             </div>
-    
-                  <div>
-                  <Link href="/home" passHref>
-                    <button
-                      className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      type="button"
-                    >
-                      Crear
-                    </button>
-                  </Link>
-                  </div>
-                </form>
-              </div>
+            {error && <div className="text-red-500 text-center">{error}</div>}
+            <div>
+              <button
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                type="submit"
+              >
+                Crear
+              </button>
             </div>
-          </div>
-      
-      );
-    }
+          </form>
+        </div>
+        <div className="px-8 py-4 bg-gray-700 text-center">
+          <span className="text-gray-400">¿Ya tienes cuenta? </span>
+          <Link href="/">
+            <p className="font-medium text-indigo-500 hover:text-indigo-400 cursor-pointer">
+              Iniciar sesión
+            </p>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default Register;

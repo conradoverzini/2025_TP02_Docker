@@ -26,19 +26,20 @@ export function getCourses() {
             throw error;
         });
 }
+
+
 export function login(loginRequest) {
     return axios
-        .post('http://localhost:8080/users/login', loginRequest)
-        .then(function (loginResponse) {
-            console.log("Token: ", loginResponse.data);
-            return loginResponse.data; 
-        })
-        .catch(function (error) {
-            console.log("Hubo un Error en el logueo:", error);
-            throw error;
-        });
-}
-
+      .post('http://localhost:8080/users/login', loginRequest)
+      .then(function (loginResponse) {
+        console.log("Token: ", loginResponse.data);
+        return loginResponse.data; 
+      })
+      .catch(function (error) {
+        console.log("Hubo un Error en el logueo:", error);
+        throw error;
+      });
+  }
 
 export function registration(registrationRequest) {
     return axios

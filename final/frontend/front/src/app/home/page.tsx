@@ -38,14 +38,19 @@ export default function Home() {
   };
 
   const handleSubscribe = async (courseId: number) => {
-    const userId = 1; // Usuario con ID 1
+    const userId = 5; // Usuario con ID 5
+    console.log(`UserID: ${userId}, CourseID: ${courseId}`);
+    const subscribeRequest = { userId, courseId };
+    console.log('SubscribeRequest:', subscribeRequest);
+
     try {
-      await subscribe({ userId, courseId });
+      await subscribe(subscribeRequest);
+      console.log('Suscripción exitosa');
       // Actualizar el estado de los cursos después de la suscripción si es necesario
     } catch (error) {
-      console.error("Error subscribing to course:", error);
+      console.error("Error suscribiéndose al curso:", error);
     }
-  };
+  };;
 
   return (
     <div className="w-full min-h-screen bg-gray-800">

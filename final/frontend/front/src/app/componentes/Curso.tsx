@@ -50,6 +50,7 @@ const Curso: React.FC<CourseProps> = ({
             <button
               onClick={() => handleSubscribe(id)} // Llama a handleSubscribe con el id del curso
               className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
+              
             >
               Inscribirse
             </button>

@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../componentes/Navbar";
 
 export default function HomeLayout({
   children,

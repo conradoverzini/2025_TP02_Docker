@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function HomeLayout({
+export default function MyCoursesLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -13,4 +13,3 @@ export default function HomeLayout({
     </div>
   );
 }
-

@@ -8,7 +8,8 @@ type CourseProps = {
   instructor: string;
   duration: number;
   requirement: string;
-  handleSubscribe: (id: number) => void; // Prop para manejar la suscripción al curso
+  handleSubscribe: (id: number) => void; 
+  message: string; 
 };
 
 const Curso: React.FC<CourseProps> = ({
@@ -20,6 +21,7 @@ const Curso: React.FC<CourseProps> = ({
   duration,
   requirement,
   handleSubscribe,
+  message,
 }) => {
   return (
     <div className="max-w-md mx-auto my-8 bg-gray-300 rounded-xl shadow-md overflow-hidden">
@@ -48,11 +50,11 @@ const Curso: React.FC<CourseProps> = ({
           </div>
           <div className="flex justify-center mt-6">
             <button
-              onClick={() => handleSubscribe(id)} // Llama a handleSubscribe con el id del curso
+              onClick={() => handleSubscribe(id)} 
               className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
               
             >
-              Inscribirse
+              {message}
             </button>
           </div>
         </div>

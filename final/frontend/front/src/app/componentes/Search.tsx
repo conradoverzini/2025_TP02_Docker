@@ -9,6 +9,7 @@ const Search: React.FC<SearchProps> = ({ onSearchResults }) => {
   const [query, setQuery] = useState<string>("");
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log("Query: ", e.target.value);
     setQuery(e.target.value);
   };
 
@@ -16,11 +17,9 @@ const Search: React.FC<SearchProps> = ({ onSearchResults }) => {
     e.preventDefault();
     try {
       if (query.trim() === "") {
-        // Si la consulta está vacía, obtén todos los cursos disponibles
-        const response = await search(""); // Pasar una cadena vacía como consulta
+        const response = await search("");
         onSearchResults(response.results);
       } else {
-        // Si hay una consulta, realiza la búsqueda normalmente
         const response = await search(query);
         onSearchResults(response.results);
       }

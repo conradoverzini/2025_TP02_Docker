@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Register from "@/app/componentes/Register";
 
 export default function Home() {

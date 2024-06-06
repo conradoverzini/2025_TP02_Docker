@@ -1,11 +1,10 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { getCourses } from '@/app/utils/axios'; 
+import { subscriptionList } from '@/app/utils/axios'; 
 import Curso from '../componentes/Curso';
 import Navbar from '../componentes/Navbar'; 
-import { subscribe } from '@/app/utils/axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 export type course = {
   id: number;
@@ -17,13 +16,15 @@ export type course = {
   requirement: string;
 };
 
-export default function Home() {
+const userId = 2;
+
+export default function MyCourses() {
   const [courses, setCourses] = useState<course[]>([]);
 
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const data: course[] = await getCourses();
+        const data: course[] = await subscriptionList(userId);
         setCourses(data); 
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -37,20 +38,9 @@ export default function Home() {
     setCourses(results);
   };
 
-  const handleSubscribe = async (courseId: number) => {
-    const userId = 5; 
-    const subscribeRequest = { userId, courseId };
-    try {
-      await subscribe(subscribeRequest);
-      console.log('Suscripción exitosa');
-    } catch (error) {
-      console.error("Error suscribiéndose al curso:", error);
-    }
-  };;
-
   return (
     <div className="w-full min-h-screen bg-gray-800">
-      <Navbar onSearchResults={handleSearchResults} /> {/* Renderiza el navbar y pasa la función de búsqueda */}
+      <Navbar onSearchResults={handleSearchResults} /> 
       <div className="pt-16 w-full flex flex-col items-center justify-start overflow-y-auto">
         {courses.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -64,19 +54,18 @@ export default function Home() {
                 instructor={course.instructor}
                 duration={course.duration}
                 requirement={course.requirement}
-                handleSubscribe={handleSubscribe} 
-                message='Inscribirse'
+                handleSubscribe={() => {}} 
+                message='+ Info'
               />
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center min-h-screen">
-            <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 text-6xl mb-4" />
-            <p className="text-white text-4xl">No se encontraron cursos</p>
-          </div>
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 text-6xl mb-4" />
+                <p className="text-white text-4xl">No se encontraron cursos</p>
+            </div>
         )}
       </div>
     </div>
   );
 }
-

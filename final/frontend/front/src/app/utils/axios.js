@@ -3,7 +3,7 @@ import axios from "axios";
 export function search(query) {
   return axios
     .get("http://localhost:8080/courses/search", {
-      params: { query: query }, // Enviar el query como parámetro
+      params: { query: query }, 
     })
     .then(function (response) {
       return response.data;
@@ -53,9 +53,7 @@ export function registration(registrationRequest) {
 }
 
 export function subscribe(subscribeRequest) {
-  console.log(subscribeRequest);
   return axios
-
     .post("http://localhost:8080/subscriptions", subscribeRequest)
     .then(function (result) {
       console.log("Resultado de la subscripcion: ", result.data);
@@ -67,13 +65,12 @@ export function subscribe(subscribeRequest) {
     });
 }
 
-//
 
 export function subscriptionList(userId) {
   return axios
     .get(`http://localhost:8080/users/subscriptions/${userId}`)
     .then(function (listResponse) {
-      return listResponse.data;
+      return listResponse.data.results;
     })
     .catch(function (error) {
       console.error("Hubo un Error en la busqueda de inscripciones:", error);

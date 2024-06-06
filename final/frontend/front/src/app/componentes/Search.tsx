@@ -1,4 +1,3 @@
-"use client"
 import React, { useState } from "react";
 import { search } from "@/app/utils/axios"; 
 
@@ -16,8 +15,15 @@ const Search: React.FC<SearchProps> = ({ onSearchResults }) => {
   const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await search(query); // Llama a la función search del axios.js
-      onSearchResults(response.results);
+      if (query.trim() === "") {
+        // Si la consulta está vacía, obtén todos los cursos disponibles
+        const response = await search(""); // Pasar una cadena vacía como consulta
+        onSearchResults(response.results);
+      } else {
+        // Si hay una consulta, realiza la búsqueda normalmente
+        const response = await search(query);
+        onSearchResults(response.results);
+      }
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

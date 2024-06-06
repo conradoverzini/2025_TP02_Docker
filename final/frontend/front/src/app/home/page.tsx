@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getCourses } from '@/app/utils/axios'; // Asegúrate de que la ruta sea correcta
 import Curso from '../componentes/Curso';
 import Navbar from '../componentes/Navbar'; // Importa el navbar
+import { subscribe } from '@/app/utils/axios';
 
 export type course = {
   id: number;
@@ -12,6 +13,8 @@ export type course = {
   instructor: string;
   duration: number;
   requirement: string;
+  
+
 };
 
 export default function Home() {
@@ -34,6 +37,16 @@ export default function Home() {
     setCourses(results);
   };
 
+  const handleSubscribe = async (courseId: number) => {
+    const userId = 1; // Usuario con ID 1
+    try {
+      await subscribe({ userId, courseId });
+      // Actualizar el estado de los cursos después de la suscripción si es necesario
+    } catch (error) {
+      console.error("Error subscribing to course:", error);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-800">
       <Navbar onSearchResults={handleSearchResults} /> {/* Renderiza el navbar y pasa la función de búsqueda */}
@@ -50,6 +63,7 @@ export default function Home() {
                 instructor={course.instructor}
                 duration={course.duration}
                 requirement={course.requirement}
+                handleSubscribe={handleSubscribe} // Pasa la función handleSubscribe como prop
               />
             ))}
           </div>

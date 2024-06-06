@@ -4,7 +4,11 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
-function Navbar() {
+type NavbarProps = {
+  onSearchResults: (courses: any[]) => void;
+};
+
+const Navbar: React.FC<NavbarProps> = ({ onSearchResults }) => {
   return (
     <nav className="fixed top-0 left-0 w-full bg-gray-900 duration-300 h-16 flex items-center p-3 z-10">
       <div className="w-full max-w-screen-xl mx-auto flex items-center justify-between">
@@ -18,7 +22,7 @@ function Navbar() {
           </Link>
         </div>
         <div className="flex-1 mx-4 flex justify-center">
-          <Search />
+          <Search onSearchResults={onSearchResults} />
         </div>
         {/* Espacio para iconos de usuario a la derecha */}
         <div className="flex items-center">
@@ -27,6 +31,7 @@ function Navbar() {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;
+

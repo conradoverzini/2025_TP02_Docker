@@ -1,11 +1,13 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { search } from "@/app/utils/axios"; 
-import { course } from "../home/page";
 
-const Search: React.FC = () => {
+type SearchProps = {
+  onSearchResults: (courses: any[]) => void;
+};
+
+const Search: React.FC<SearchProps> = ({ onSearchResults }) => {
   const [query, setQuery] = useState<string>("");
-  const [courses, setCourses] = useState<any[]>([]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setQuery(e.target.value);
@@ -15,24 +17,11 @@ const Search: React.FC = () => {
     e.preventDefault();
     try {
       const response = await search(query); // Llama a la función search del axios.js
-      setCourses(response.results);
+      onSearchResults(response.results);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
   };
-
-{/* useEffect(() => {
-    async function fetchCourses() {
-      try {
-        const data: course[] = await search();
-        setCourses(data); 
-      } catch (error) {
-        console.error("Error encontrando cursos:", error);
-      }
-    }
-
-    fetchCourses();
-  }, []); */}
 
   return (
     <div className="flex justify-center w-full">
@@ -46,23 +35,6 @@ const Search: React.FC = () => {
             onChange={handleSearchChange}
           />
         </form>
-      </div>
-      <div className="Courses">
-        {courses.length > 0 ? (
-          courses.map((course) => (
-            <div key={course.id} className="Course">
-              <div className="Course-details">
-                <h1 className="Course-title">{course.title}</h1>
-                <p className="Course-description">{course.description}</p>
-                <p className="Course-category">
-                  <strong>{course.category}</strong>
-                </p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p></p>
-        )}
       </div>
     </div>
   );

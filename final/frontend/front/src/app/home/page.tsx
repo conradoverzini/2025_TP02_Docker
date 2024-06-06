@@ -30,26 +30,34 @@ export default function Home() {
     fetchCourses();
   }, []);
 
+  const handleSearchResults = (results: course[]) => {
+    setCourses(results);
+  };
+
   return (
-    <div className="w-full h-full flex flex-col items-center justify-start overflow-y-auto pt-16 bg-gray-800">
-      {courses.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <Curso
-              key={course.id}
-              id={course.id}
-              title={course.title}
-              description={course.description}
-              category={course.category}
-              instructor={course.instructor}
-              duration={course.duration}
-              requirement={course.requirement}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-white">Loading courses...</p>
-      )}
+    <div className="w-full min-h-screen bg-gray-800">
+      <Navbar onSearchResults={handleSearchResults} /> {/* Renderiza el navbar y pasa la función de búsqueda */}
+      <div className="pt-16 w-full flex flex-col items-center justify-start overflow-y-auto">
+        {courses.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <Curso
+                key={course.id}
+                id={course.id}
+                title={course.title}
+                description={course.description}
+                category={course.category}
+                instructor={course.instructor}
+                duration={course.duration}
+                requirement={course.requirement}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-white">No se encontraron cursos!</p>
+        )}
+      </div>
     </div>
   );
 }
+

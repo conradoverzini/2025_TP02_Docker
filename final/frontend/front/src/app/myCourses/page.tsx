@@ -16,7 +16,7 @@ export type course = {
   requirement: string;
 };
 
-const userId = 2;
+const userId = 5;
 
 export default function MyCourses() {
   const [courses, setCourses] = useState<course[]>([]);

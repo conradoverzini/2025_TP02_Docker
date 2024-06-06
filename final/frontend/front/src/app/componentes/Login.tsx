@@ -29,13 +29,13 @@ function Login() {
           <h2 className="text-center text-3xl font-extrabold text-white">
             Bienvenido a EMARVE!
           </h2>
-          <p className="mt-4 text-center text-gray-400">Ingresa para acceder a los mejor cursos</p>
+          <p className="mt-4 text-center text-gray-400">Ingresa para acceder a los mejores cursos</p>
           <form onSubmit={handleLogin} className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm">
               <div>
                 <label className="sr-only" htmlFor="email">Email</label>
                 <input
-                  placeholder="Email address"
+                  placeholder="Email"
                   className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   required={true}
                   autoComplete="email"

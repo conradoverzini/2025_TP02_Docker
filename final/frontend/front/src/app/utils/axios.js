@@ -66,6 +66,7 @@ export function subscribe(subscribeRequest) {
 }
 
 
+
 export function subscriptionList(userId) {
   return axios
     .get(`http://localhost:8080/users/subscriptions/${userId}`)

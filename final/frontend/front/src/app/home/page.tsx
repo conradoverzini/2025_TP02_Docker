@@ -1,9 +1,8 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from 'react';
-import { getCourses } from '@/app/utils/axios'; 
+import { getCourses, subscribe } from '@/app/utils/axios'; 
 import Curso from '../componentes/Curso';
 import Navbar from '../componentes/Navbar'; 
-import { subscribe } from '@/app/utils/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
@@ -37,16 +36,16 @@ export default function Home() {
     setCourses(results);
   };
 
-  const handleSubscribe = async (courseId: number) => {
-    const userId = 5; 
-    const subscribeRequest = { userId, courseId };
+  const handleSubscribe = async (course_id: number) => {
+    const user_id = 5; 
+    const subscribeRequest = {user_id, course_id}
     try {
       await subscribe(subscribeRequest);
       console.log('Suscripción exitosa');
     } catch (error) {
       console.error("Error suscribiéndose al curso:", error);
     }
-  };;
+  };
 
   return (
     <div className="w-full min-h-screen bg-gray-800">
@@ -79,4 +78,3 @@ export default function Home() {
     </div>
   );
 }
-

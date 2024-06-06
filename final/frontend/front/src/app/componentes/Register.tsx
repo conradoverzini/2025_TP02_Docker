@@ -41,7 +41,7 @@ function Register() {
               <div>
                 <label className="sr-only" htmlFor="username">Username</label>
                 <input
-                  placeholder="Username"
+                  placeholder="Nombre de usuario"
                   className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   required={true}
                   autoComplete="username"
@@ -55,7 +55,7 @@ function Register() {
               <div className="mt-4">
                 <label className="sr-only" htmlFor="email">Email</label>
                 <input
-                  placeholder="Email address"
+                  placeholder="Email"
                   className="appearance-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   required={true}
                   autoComplete="email"

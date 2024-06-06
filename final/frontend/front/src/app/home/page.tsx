@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getCourses } from '@/app/utils/axios'; // Asegúrate de que la ruta sea correcta
 import Curso from '../componentes/Curso';
+import Navbar from '../componentes/Navbar'; // Importa el navbar
 
 export type course = {
   id: number;
@@ -30,7 +31,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-screen h-screen bg-gray-800 flex flex-col items-center justify-center overflow-x-auto">
+    <div className="w-full h-full flex flex-col items-center justify-start overflow-y-auto pt-16 bg-gray-800">
       {courses.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => (

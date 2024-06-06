@@ -6,7 +6,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 function Navbar() {
   return (
-    <nav className="bg-gray-900 duration-300 h-15 flex items-center p-3 pt-[14px]">
+    <nav className="fixed top-0 left-0 w-full bg-gray-900 duration-300 h-16 flex items-center p-3 z-10">
       <div className="w-full max-w-screen-xl mx-auto flex items-center justify-between">
         {/* Icono a la izquierda */}
         <div className="flex items-center">

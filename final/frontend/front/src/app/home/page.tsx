@@ -42,8 +42,11 @@ export default function Home() {
     try {
       await subscribe(subscribeRequest);
       console.log('Suscripción exitosa');
-    } catch (error) {
-      console.error("Error suscribiéndose al curso:", error);
+      alert("Inscripcion Exitosa")
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        alert("Ya se encuentra inscrito");
+      } 
     }
   };
 

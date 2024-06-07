@@ -81,16 +81,13 @@ func UserRegister(nickname string, email string, password string, typeUser bool)
 }
 
 func SubscriptionList(UserID int64) ([]domain.Course, error) {
-	// Obtener los IDs de los cursos a los que el usuario está suscrito
 	courseIDs, err := clients.GetCourseIdsByUserId(UserID)
 	if err != nil {
 		return nil, fmt.Errorf("error getting course IDs for user ID %d: %v", UserID, err)
 	}
 
-	// Lista para almacenar los cursos
 	var courses []dao.Course
 
-	// Obtener los detalles de cada curso por su ID
 	for _, courseID := range courseIDs {
 		course, err := clients.GetCourseById(courseID)
 		if err != nil {

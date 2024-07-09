@@ -114,3 +114,24 @@ func SubscriptionList(UserID int64) ([]domain.Course, error) {
 
 	return results, nil
 }
+
+func AddComment(userID int64, courseID int64, comment string) error {
+
+	if _, err := clients.GetUserById(userID); err != nil {
+		return fmt.Errorf("error getting user from DB: %v", err)
+	}
+
+	if _, err := clients.GetCourseById(courseID); err != nil {
+		return fmt.Errorf("error getting course from DB: %v", err)
+	}
+
+	if strings.TrimSpace(comment) == "" {
+		return errors.New("comment is required")
+	}
+
+	if err := clients.InsertComment(userID, courseID, comment); err != nil {
+		return fmt.Errorf("error inserting comment into DB: %v", err)
+	}
+
+	return nil
+}

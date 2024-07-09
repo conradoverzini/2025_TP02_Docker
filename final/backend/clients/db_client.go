@@ -20,10 +20,10 @@ var (
 
 func init() {
 	// DB Connections Parameters
-	dbName := "final"     //Nombre de la base de datos local
-	dbUser := "root"      //Usuario de la base de datos, habitualmente root
-	dbPassword := ""      //Password del root en la instalacion
-	dbHost := "localhost" //Host de la base de datos. Habitualmente 127.0.0.1
+	dbName := "final"         //Nombre de la base de datos local
+	dbUser := "root"          //Usuario de la base de datos, habitualmente root
+	dbPassword := "jsjdm5712" //Password del root en la instalacion
+	dbHost := "localhost"     //Host de la base de datos. Habitualmente 127.0.0.1
 	dbPort := 3306
 
 	connection := fmt.Sprintf(connectionString, dbUser, dbPassword, dbHost, dbPort, dbName)
@@ -39,7 +39,8 @@ func StartDB() {
 	var user dao.User
 	var course dao.Course
 	var subscription dao.Subscription
-	if err := DBClient.AutoMigrate(&user, &course, &subscription); err != nil {
+	var comment dao.Comment
+	if err := DBClient.AutoMigrate(&user, &course, &subscription, &comment); err != nil {
 		panic(fmt.Errorf("error creating entities: %v", err))
 	}
 }
@@ -258,4 +259,56 @@ func UpdateCourse(courseID int64, courseUpdate dao.Course) error {
 
 	log.Debug("Course updated: ", course)
 	return nil
+}
+
+func InsertComment(userID int64, courseID int64, text string) error {
+	var comment dao.Comment
+	result := DBClient.Where("user_id = ? AND course_id = ? AND text = ?", userID, courseID, text).First(&comment)
+
+	if result.Error == nil {
+		return fmt.Errorf("comment already exists for user %d and course %d", userID, courseID)
+	}
+
+	NewComment := dao.Comment{
+		User_Id:   userID,
+		Course_Id: courseID,
+		Text:      text,
+	}
+
+	result = DBClient.Create(&NewComment)
+	if result.Error != nil {
+		return fmt.Errorf("error inserting comment for user %d and course %d", userID, courseID)
+	}
+
+	log.Debug("Comment created: ", NewComment)
+	return nil
+}
+
+func GetCommentById(commentID int64) (dao.Comment, error) {
+	var comment dao.Comment
+
+	result := DBClient.Where("id = ?", commentID).First(&comment)
+
+	if result.Error != nil {
+		return comment, fmt.Errorf("not found comment with ID: %d", commentID)
+	}
+
+	log.Debug("Comment: ", comment)
+	return comment, nil
+}
+
+func GetCommentsByCourseId(courseID int64) ([]int64, error) {
+	var comments []dao.Comment
+	var commentIDs []int64
+
+	result := DBClient.Where("course_Id = ?", courseID).Find(&comments)
+	if result.Error != nil {
+		return nil, fmt.Errorf("error finding comments for course ID: %d, %v", courseID, result.Error)
+	}
+
+	for _, comment := range comments {
+		commentIDs = append(commentIDs, comment.Id)
+	}
+
+	return commentIDs, nil
 }

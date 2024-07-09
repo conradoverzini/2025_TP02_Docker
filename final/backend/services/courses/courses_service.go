@@ -202,3 +202,31 @@ func DeleteCourse(courseID int64) error {
 
 	return nil
 }
+
+func CommentList(CourseID int64) ([]domain.CommentResponse, error) {
+	commentIDs, err := clients.GetCommentsByCourseId(CourseID)
+	if err != nil {
+		return nil, fmt.Errorf("error getting comments IDs for course ID %d: %v", CourseID, err)
+	}
+
+	var comments []dao.Comment
+
+	for _, commentID := range commentIDs {
+		comment, err := clients.GetCommentById(commentID)
+		if err != nil {
+			return nil, fmt.Errorf("error getting comment with ID %d: ", commentID)
+		}
+		comments = append(comments, comment)
+	}
+
+	results := make([]domain.CommentResponse, 0)
+
+	for _, comment := range comments {
+		results = append(results, domain.CommentResponse{
+			UserID:  comment.User_Id,
+			Comment: comment.Text,
+		})
+	}
+
+	return results, nil
+}

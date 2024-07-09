@@ -80,3 +80,24 @@ func SubscriptionList(c *gin.Context) {
 	})
 
 }
+
+func AddComment(c *gin.Context) {
+	var commentRequest userDomain.CommentRequest
+	if err := c.ShouldBindJSON(&commentRequest); err != nil {
+		c.JSON(http.StatusBadRequest, userDomain.Result{
+			Message: fmt.Sprintf("invalid request: %s", err.Error()),
+		})
+		return
+	}
+
+	if err := userService.AddComment(commentRequest.UserID, commentRequest.CourseID, commentRequest.Comment); err != nil {
+		c.JSON(http.StatusConflict, userDomain.Result{
+			Message: fmt.Sprintf("error in course comment: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, userDomain.Result{
+		Message: fmt.Sprintf("successful comment of user %d to course %d", commentRequest.UserID, commentRequest.CourseID),
+	})
+}

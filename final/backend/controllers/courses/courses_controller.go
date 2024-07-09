@@ -165,3 +165,27 @@ func DeleteCourse(c *gin.Context) {
 
 	c.Status(http.StatusNoContent)
 }
+
+func CommentList(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, courseDomain.Result{
+			Message: fmt.Sprintf("invalid id: %s", err.Error()),
+		})
+
+		return
+	}
+
+	results, err := courseService.CommentList(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, courseDomain.Result{
+			Message: fmt.Sprintf("error in getting comments: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, courseDomain.CommentList{
+		Result: results,
+	})
+
+}

@@ -40,7 +40,8 @@ func StartDB() {
 	var course dao.Course
 	var subscription dao.Subscription
 	var comment dao.Comment
-	if err := DBClient.AutoMigrate(&user, &course, &subscription, &comment); err != nil {
+	var file dao.File
+	if err := DBClient.AutoMigrate(&user, &course, &subscription, &comment, &file); err != nil {
 		panic(fmt.Errorf("error creating entities: %v", err))
 	}
 }
@@ -311,4 +312,26 @@ func GetCommentsByCourseId(courseID int64) ([]int64, error) {
 	}
 
 	return commentIDs, nil
+}
+
+func SaveFile(NewFile dao.File) error {
+	var course dao.Course
+	var user dao.User
+
+	result := DBClient.Where("id = ?", NewFile.Course_Id).First(&course)
+	if result.Error != nil {
+		return fmt.Errorf("not found course with ID: %d", NewFile.Course_Id)
+	}
+
+	result = DBClient.Where("id = ?", NewFile.User_Id).First(&user)
+	if result.Error != nil {
+		return fmt.Errorf("not found user with ID: %d", NewFile.User_Id)
+	}
+
+	result = DBClient.Create(&NewFile)
+	if result.Error != nil {
+		return fmt.Errorf("error creating file record: %v", result.Error)
+	}
+	log.Debug("File record created: ", NewFile)
+	return nil
 }

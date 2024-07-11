@@ -7,7 +7,10 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"strings"
+	"time"
 
 	jwt "github.com/golang-jwt/jwt"
 )
@@ -131,6 +134,38 @@ func AddComment(userID int64, courseID int64, comment string) error {
 
 	if err := clients.InsertComment(userID, courseID, comment); err != nil {
 		return fmt.Errorf("error inserting comment into DB: %v", err)
+	}
+
+	return nil
+}
+
+func UploadFiles(file io.Reader, filename string, userID int64, courseID int64) error {
+	filePath := fmt.Sprintf("uploads/%s", filename)
+
+	// Guardar la información del archivo en la base de datos
+	fileRecord := dao.File{
+		User_Id:    userID,
+		Course_Id:  courseID,
+		Name:       filename,
+		Url:        filePath,
+		UploadDate: time.Now(),
+	}
+
+	if err := clients.SaveFile(fileRecord); err != nil {
+		return fmt.Errorf("error uploading file in DB: %v", err)
+	}
+
+	// Crear un archivo en el directorio uploads
+	destFile, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	// Copiar el contenido del archivo al archivo de destino
+	_, err = io.Copy(destFile, file)
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -101,3 +101,51 @@ func AddComment(c *gin.Context) {
 		Message: fmt.Sprintf("successful comment of user %d to course %d", commentRequest.UserID, commentRequest.CourseID),
 	})
 }
+
+func UploadFiles(c *gin.Context) {
+	// Limitar el tamaño del archivo subido a 10MB
+	c.Request.ParseMultipartForm(10 << 20) // 10MB
+
+	// Obtener el archivo desde el formulario
+	file, handler, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, userDomain.Result{
+			Message: fmt.Sprintf("Error al obtener el archivo: %s", err.Error()),
+		})
+		return
+	}
+	defer file.Close()
+
+	// Obtener userID y courseID del formulario o parámetros
+	userIDStr := c.PostForm("user_id")
+	userID, err := strconv.ParseInt(userIDStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, userDomain.Result{
+			Message: fmt.Sprintf("Invalid user ID: %s", err.Error()),
+		})
+		return
+	}
+
+	courseIDStr := c.PostForm("course_id")
+	courseID, err := strconv.ParseInt(courseIDStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, userDomain.Result{
+			Message: fmt.Sprintf("Invalid course ID: %s", err.Error()),
+		})
+		return
+	}
+
+	// Llamar al servicio para guardar el archivo
+	err = userService.UploadFiles(file, handler.Filename, userID, courseID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, userDomain.Result{
+			Message: fmt.Sprintf("Error al guardar el archivo: %s", err.Error()),
+		})
+		return
+	}
+
+	// Responder al cliente que el archivo se subió correctamente
+	c.JSON(http.StatusOK, userDomain.Result{
+		Message: fmt.Sprintf("Archivo subido exitosamente: %s", handler.Filename),
+	})
+}

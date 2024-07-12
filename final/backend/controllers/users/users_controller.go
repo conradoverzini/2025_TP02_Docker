@@ -44,7 +44,7 @@ func UserRegister(c *gin.Context) {
 		return
 	}
 
-	err := userService.UserRegister(registrationRequest.Nickname, registrationRequest.Email, registrationRequest.Password, registrationRequest.Type)
+	_, err := userService.UserRegister(registrationRequest.Nickname, registrationRequest.Email, registrationRequest.Password, registrationRequest.Type)
 	if err != nil {
 		c.JSON(http.StatusConflict, userDomain.Result{
 			Message: fmt.Sprintf("Error in registration: %s", err.Error()),
@@ -147,5 +147,27 @@ func UploadFiles(c *gin.Context) {
 	// Responder al cliente que el archivo se subió correctamente
 	c.JSON(http.StatusOK, userDomain.Result{
 		Message: fmt.Sprintf("Archivo subido exitosamente: %s", handler.Filename),
+	})
+}
+
+func UserAuthentication(c *gin.Context) {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		c.JSON(http.StatusUnauthorized, userDomain.Result{
+			Message: "Authorization header is required",
+		})
+		return
+	}
+
+	userType, err := userService.UserAuthentication(authHeader)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, userDomain.Result{
+			Message: fmt.Sprintf("Unauthorized: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, userDomain.Result{
+		Message: userType,
 	})
 }

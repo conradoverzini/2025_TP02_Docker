@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { getCourses, subscribe } from '@/app/utils/axios'; 
+import { getCourses, subscribe, userAuthentication } from '@/app/utils/axios'; 
 import Curso from '../componentes/Curso';
 import Navbar from '../componentes/Navbar'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,9 +17,24 @@ export type course = {
 };
 
 export default function Home() {
+  const [role, setRole] = useState<string>();
   const [courses, setCourses] = useState<course[]>([]);
 
   useEffect(() => {
+    async function fetchUserType() {
+      try {
+        const token = localStorage.getItem('token');
+        console.log(token); 
+        if (token) {
+          const userType = await userAuthentication(token);
+          console.log(userType); 
+          setRole(userType); 
+        }
+      } catch (error) {
+        console.error("Error fetching user type:", error);
+      }
+    }
+  
     async function fetchCourses() {
       try {
         const data: course[] = await getCourses();
@@ -28,7 +43,8 @@ export default function Home() {
         console.error("Error fetching courses:", error);
       }
     }
-
+  
+    fetchUserType();
     fetchCourses();
   }, []);
 
@@ -49,35 +65,42 @@ export default function Home() {
       } 
     }
   };
-
   return (
     <div className="w-full min-h-screen bg-gray-800">
-      <Navbar onSearchResults={handleSearchResults} /> 
-      <div className="pt-16 w-full flex flex-col items-center justify-start overflow-y-auto">
-        {courses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <Curso
-                key={course.id}
-                id={course.id}
-                title={course.title}
-                description={course.description}
-                category={course.category}
-                instructor={course.instructor}
-                duration={course.duration}
-                requirement={course.requirement}
-                handleSubscribe={handleSubscribe} 
-                message='Inscribirse'
-              />
-            ))}
+      {role === "student" ? (
+        <>
+          <Navbar onSearchResults={handleSearchResults} /> 
+          <div className="pt-16 w-full flex flex-col items-center justify-start overflow-y-auto">
+            {courses.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courses.map((course) => (
+                  <Curso
+                    key={course.id}
+                    id={course.id}
+                    title={course.title}
+                    description={course.description}
+                    category={course.category}
+                    instructor={course.instructor}
+                    duration={course.duration}
+                    requirement={course.requirement}
+                    handleSubscribe={handleSubscribe} 
+                    message='Inscribirse'
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center min-h-screen">
+                <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 text-6xl mb-4" />
+                <p className="text-white text-4xl">No se encontraron cursos</p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center min-h-screen">
-            <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-500 text-6xl mb-4" />
-            <p className="text-white text-4xl">No se encontraron cursos</p>
-          </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <p className="text-white text-4xl">Home del Administrador</p>
+        </div>
+      )}
     </div>
   );
 }

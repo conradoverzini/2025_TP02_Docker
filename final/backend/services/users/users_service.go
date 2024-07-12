@@ -42,6 +42,7 @@ func Login(email string, password string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": user.Id,
+		"type":   user.Type,
 	})
 
 	tokenString, err := token.SignedString(jwtKey)
@@ -52,18 +53,18 @@ func Login(email string, password string) (string, error) {
 	return tokenString, nil
 }
 
-func UserRegister(nickname string, email string, password string, typeUser bool) error {
+func UserRegister(nickname string, email string, password string, typeUser bool) (bool, error) {
 
 	if strings.TrimSpace(nickname) == "" {
-		return errors.New("nickname is required")
+		return typeUser, errors.New("nickname is required")
 	}
 
 	if strings.TrimSpace(email) == "" {
-		return errors.New("email is required")
+		return typeUser, errors.New("email is required")
 	}
 
 	if strings.TrimSpace(password) == "" {
-		return errors.New("password is required")
+		return typeUser, errors.New("password is required")
 	}
 
 	hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
@@ -77,10 +78,10 @@ func UserRegister(nickname string, email string, password string, typeUser bool)
 
 	err := clients.CreateUser(NewUser)
 	if err != nil {
-		return fmt.Errorf("error creating user from DB: %v", err)
+		return typeUser, fmt.Errorf("error creating user from DB: %v", err)
 	}
 
-	return nil
+	return typeUser, err
 }
 
 func SubscriptionList(UserID int64) ([]domain.Course, error) {
@@ -169,4 +170,37 @@ func UploadFiles(file io.Reader, filename string, userID int64, courseID int64) 
 	}
 
 	return nil
+}
+
+func UserAuthentication(tokenString string) (string, error) {
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+	if tokenString == "" {
+		return "", fmt.Errorf("bearer token is required")
+	}
+
+	claims := &jwt.MapClaims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return jwtKey, nil
+	})
+	if err != nil {
+		return "", fmt.Errorf("error parsing token: %v", err)
+	}
+	if !token.Valid {
+		return "", fmt.Errorf("invalid token")
+	}
+
+	userType, ok := (*claims)["type"].(bool)
+	if !ok {
+		return "", fmt.Errorf("invalid token payload")
+	}
+
+	if !userType {
+		return "student", nil
+	} else {
+		return "admin", nil
+	}
 }

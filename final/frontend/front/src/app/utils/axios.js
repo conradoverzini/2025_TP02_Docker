@@ -30,8 +30,10 @@ export function login(loginRequest) {
   return axios
     .post("http://localhost:8080/users/login", loginRequest)
     .then(function (loginResponse) {
-      console.log("Token: ", loginResponse.data);
-      return loginResponse.data;
+      console.log("Token: ", loginResponse.data.token); 
+      const token = loginResponse.data.token;
+      localStorage.setItem('token', token); 
+      return token; 
     })
     .catch(function (error) {
       console.log("Hubo un Error en el logueo:", error);
@@ -75,6 +77,20 @@ export function subscriptionList(userId) {
     })
     .catch(function (error) {
       console.error("Hubo un Error en la busqueda de inscripciones:", error);
+      throw error;
+    });
+}
+
+export function userAuthentication(token) {
+  return axios
+    .get("http://localhost:8080/users/authentication", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(function (response) {
+      return response.data.message;
+    })
+    .catch(function (error) {
+      console.error("Hubo un Error en la autenticación:", error);
       throw error;
     });
 }

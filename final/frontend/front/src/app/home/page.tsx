@@ -10,10 +10,10 @@ export default function Home() {
   useEffect(() => {
     async function fetchUserType() {
       try {
-        const token = localStorage.getItem('token');
-        console.log(token); 
-        if (token) {
-          const userType = await userAuthentication(token);
+        const tokenType = localStorage.getItem('tokenType');
+        console.log(tokenType); 
+        if (tokenType) {
+          const userType = await userAuthentication(tokenType);
           console.log(userType); 
           setRole(userType); 
         }

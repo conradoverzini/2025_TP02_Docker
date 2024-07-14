@@ -171,3 +171,25 @@ func UserAuthentication(c *gin.Context) {
 		Message: userType,
 	})
 }
+
+func GetUserID(c *gin.Context) {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		c.JSON(http.StatusUnauthorized, userDomain.Result{
+			Message: "Authorization header is required",
+		})
+		return
+	}
+
+	userID, err := userService.GetUserID(authHeader)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, userDomain.Result{
+			Message: fmt.Sprintf("Unauthorized: %s", err.Error()),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, userDomain.ResultInt{
+		Message: userID,
+	})
+}

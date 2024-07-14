@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { getCourses, subscribe } from '@/app/utils/axios'; 
+import { getCourses, getUserId, subscribe } from '@/app/utils/axios'; 
 import Curso from '../componentes/Curso';
 import Navbar from '../componentes/Navbar'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,6 +18,23 @@ export type course = {
 
 const StudentHome: React.FC = () => {
   const [courses, setCourses] = useState<course[]>([]);
+  const [user_id, setUserId] = useState<number>();
+
+  useEffect(() => {
+    async function fetchUserId() {
+      try {
+        const tokenId = localStorage.getItem('tokenId');
+        if (tokenId) {
+          const Id = await getUserId(tokenId);
+          console.log(Id); 
+          setUserId(Id); 
+        }
+      } catch (error) {
+        console.error("Error fetching user id:", error);
+      }
+    }
+  fetchUserId();
+  }, []);
 
   useEffect(() => {
     async function fetchCourses() {
@@ -28,7 +45,7 @@ const StudentHome: React.FC = () => {
         console.error("Error fetching courses:", error);
       }
     }
-  
+    
     fetchCourses();
   }, []);
 
@@ -37,7 +54,6 @@ const StudentHome: React.FC = () => {
   };
 
   const handleSubscribe = async (course_id: number) => {
-    const user_id = 5; 
     const subscribeRequest = {user_id, course_id}
     try {
       await subscribe(subscribeRequest);

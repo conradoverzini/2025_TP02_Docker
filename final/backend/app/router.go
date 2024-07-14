@@ -23,4 +23,5 @@ func MapRoutes(engine *gin.Engine) {
 	engine.GET("/courses/comments/:id", courses.CommentList)
 	engine.POST("/upload", users.UploadFiles)
 	engine.GET("/users/authentication", users.UserAuthentication)
+	engine.GET("/users/userId", users.GetUserID)
 }

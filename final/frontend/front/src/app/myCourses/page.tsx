@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { subscriptionList } from '@/app/utils/axios'; 
+import { getUserId, subscriptionList } from '@/app/utils/axios'; 
 import Curso from '../componentes/Curso';
 import Navbar from '../componentes/Navbar'; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,23 +16,41 @@ export type course = {
   requirement: string;
 };
 
-const userId = 5;
-
 export default function MyCourses() {
   const [courses, setCourses] = useState<course[]>([]);
+  const [userId, setUserId] = useState<number>();
 
   useEffect(() => {
-    async function fetchCourses() {
+    async function fetchUserId() {
       try {
-        const data: course[] = await subscriptionList(userId);
-        setCourses(data); 
+        const tokenId = localStorage.getItem('tokenId');
+        if (tokenId) {
+          const Id = await getUserId(tokenId);
+          console.log("Fetched User ID:", Id);
+          setUserId(Id); 
+        }
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.error("Error fetching user id:", error);
       }
     }
 
-    fetchCourses();
+    fetchUserId();
   }, []);
+
+  useEffect(() => {
+      console.log("User ID changed:", userId); 
+      async function fetchCourses() {
+        try {
+          const data: course[] = await subscriptionList(userId);
+          setCourses(data); 
+        } catch (error) {
+          console.error("Error fetching courses:", error);
+        }
+      }
+
+      fetchCourses();
+  }, [userId]); 
+
 
   const handleSearchResults = (results: course[]) => {
     setCourses(results);

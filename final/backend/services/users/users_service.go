@@ -204,3 +204,32 @@ func UserAuthentication(tokenString string) (string, error) {
 		return "admin", nil
 	}
 }
+
+func GetUserID(tokenString string) (int, error) {
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+	if tokenString == "" {
+		return 0, fmt.Errorf("bearer token is required")
+	}
+
+	claims := &jwt.MapClaims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return jwtKey, nil
+	})
+	if err != nil {
+		return 0, fmt.Errorf("error parsing token: %v", err)
+	}
+	if !token.Valid {
+		return 0, fmt.Errorf("invalid token")
+	}
+
+	userID, ok := (*claims)["userID"].(float64)
+	if !ok {
+		return 0, fmt.Errorf("invalid token payload")
+	}
+
+	return int(userID), nil
+}

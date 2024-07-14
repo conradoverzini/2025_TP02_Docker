@@ -8,8 +8,10 @@ type CourseProps = {
   instructor: string;
   duration: number;
   requirement: string;
-  handleSubscribe: (id: number) => void; 
-  message: string; 
+  handleSubscribe?: (id: number) => void; 
+  handleModify?: (id: number) => void;
+  handleDelete?: (id: number) => void;
+  message?: string;
 };
 
 const Curso: React.FC<CourseProps> = ({
@@ -21,6 +23,8 @@ const Curso: React.FC<CourseProps> = ({
   duration,
   requirement,
   handleSubscribe,
+  handleModify,
+  handleDelete,
   message,
 }) => {
   return (
@@ -48,14 +52,31 @@ const Curso: React.FC<CourseProps> = ({
             <span className="text-gray-700 font-semibold">Requisitos:</span>{" "}
             {requirement}
           </div>
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => handleSubscribe(id)} 
-              className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
-              
-            >
-              {message}
-            </button>
+          <div className="flex justify-center mt-6 space-x-4">
+            {handleSubscribe && message && (
+              <button
+                onClick={() => handleSubscribe(id)} 
+                className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
+              >
+                {message}
+              </button>
+            )}
+            {handleModify && handleDelete && (
+              <>
+                <button
+                  onClick={() => handleModify(id)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Modificar
+                </button>
+                <button
+                  onClick={() => handleDelete(id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Eliminar
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

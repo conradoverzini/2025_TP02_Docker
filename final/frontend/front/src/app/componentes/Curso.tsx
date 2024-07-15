@@ -8,8 +8,8 @@ type CourseProps = {
   instructor: string;
   duration: number;
   requirement: string;
-  handleSubscribe?: (id: number) => void; 
-  handleModify?: (id: number) => void;
+  handleSubscribe?: (id: number) => void;
+  handleUpdate?: (id: number) => void;
   handleDelete?: (id: number) => void;
   message?: string;
 };
@@ -23,7 +23,7 @@ const Curso: React.FC<CourseProps> = ({
   duration,
   requirement,
   handleSubscribe,
-  handleModify,
+  handleUpdate,
   handleDelete,
   message,
 }) => {
@@ -55,27 +55,27 @@ const Curso: React.FC<CourseProps> = ({
           <div className="flex justify-center mt-6 space-x-4">
             {handleSubscribe && message && (
               <button
-                onClick={() => handleSubscribe(id)} 
+                onClick={() => handleSubscribe(id)}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
               >
                 {message}
               </button>
             )}
-            {handleModify && handleDelete && (
-              <>
-                <button
-                  onClick={() => handleModify(id)}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
-                >
-                  Modificar
-                </button>
-                <button
-                  onClick={() => handleDelete(id)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                >
-                  Eliminar
-                </button>
-              </>
+            {handleUpdate && (
+              <button
+                onClick={() => handleUpdate(id)}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Modificar
+              </button>
+            )}
+            {handleDelete && (
+              <button
+                onClick={() => handleDelete(id)}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Eliminar
+              </button>
             )}
           </div>
         </div>

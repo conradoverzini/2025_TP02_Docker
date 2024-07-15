@@ -1,10 +1,10 @@
-"use client";
 import React, { useEffect, useState } from 'react';
-import { getCourses } from '@/app/utils/axios'; 
+import { getCourses, deleteCourse, updateCourse, createCourse } from '@/app/utils/axios'; 
 import Curso from '../componentes/Curso';
-import Navbar from '../componentes/Navbar'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import NavbarAdmin from './NavbarAdmin';
+import CourseData from '../componentes/CourseData';
 
 export type course = {
   id: number;
@@ -18,6 +18,8 @@ export type course = {
 
 const AdminHome: React.FC = () => {
   const [courses, setCourses] = useState<course[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [courseToUpdate, setCourseToUpdate] = useState<course | null>(null);
 
   useEffect(() => {
     async function fetchCourses() {
@@ -36,33 +38,45 @@ const AdminHome: React.FC = () => {
     setCourses(results);
   };
 
-  const handleModify = (course_id: number) => {
-    console.log('Modificar curso:', course_id);
-    // Lógica para modificar el curso
+  const handleUpdate = (courseId: number) => {
+    const course = courses.find((c) => c.id === courseId);
+    setCourseToUpdate(course || null);
+    setShowModal(true);
   };
 
-  const handleDelete = (course_id: number) => {
-    console.log('Eliminar curso:', course_id);
-    // Lógica para eliminar el curso
+  const handleDelete = async (courseId: number) => {
+    try {
+      await deleteCourse(courseId);
+      setCourses(courses.filter((course) => course.id !== courseId));
+    } catch (error) {
+      console.error("Error deleting course:", error);
+    }
   };
 
   const handleAddCourse = () => {
-    console.log('Añadir nuevo curso');
-    // Lógica para añadir un nuevo curso
+    setCourseToUpdate(null);
+    setShowModal(true);
+  };
+
+  const handleFormSubmit = async (data: any) => {
+    try {
+      if (courseToUpdate) {
+        await updateCourse(courseToUpdate.id, data);
+      } else {
+        await createCourse(data);
+      }
+      setShowModal(false);
+      const updatedCourses = await getCourses();
+      setCourses(updatedCourses);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
     <>
-      <Navbar onSearchResults={handleSearchResults} /> 
+      <NavbarAdmin onSearchResults={handleSearchResults} onAddCourse={handleAddCourse} /> 
       <div className="pt-16 w-full flex flex-col items-center justify-start overflow-y-auto">
-        <div className="flex justify-center mt-8 mb-2">
-          <button
-            onClick={handleAddCourse}
-            className="bg-blue-500 text-white px-10 py-4 rounded-lg text-xl font-bold hover:bg-blue-600"
-          >
-            Añadir nuevo curso
-          </button>
-        </div>
         {courses.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {courses.map((course) => (
@@ -75,7 +89,7 @@ const AdminHome: React.FC = () => {
                 instructor={course.instructor}
                 duration={course.duration}
                 requirement={course.requirement}
-                handleModify={handleModify}
+                handleUpdate={handleUpdate}
                 handleDelete={handleDelete}
               />
             ))}
@@ -86,9 +100,17 @@ const AdminHome: React.FC = () => {
             <p className="text-white text-4xl">No se encontraron cursos</p>
           </div>
         )}
+        {showModal && (
+          <CourseData
+            id={courseToUpdate?.id}
+            initialData={courseToUpdate || undefined}
+            handleSubmit={handleFormSubmit}
+            handleClose={() => setShowModal(false)}
+          />
+        )}
       </div>
     </>
   );
-}
+};
 
 export default AdminHome;

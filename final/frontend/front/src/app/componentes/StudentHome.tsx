@@ -26,6 +26,7 @@ const StudentHome: React.FC = () => {
         const tokenId = localStorage.getItem('tokenId');
         if (tokenId) {
           const Id = await getUserId(tokenId);
+          localStorage.setItem('userId', Id); 
           console.log(Id); 
           setUserId(Id); 
         }

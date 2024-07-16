@@ -103,10 +103,9 @@ func AddComment(c *gin.Context) {
 }
 
 func UploadFiles(c *gin.Context) {
-	// Limitar el tamaño del archivo subido a 10MB
-	c.Request.ParseMultipartForm(10 << 20) // 10MB
 
-	// Obtener el archivo desde el formulario
+	c.Request.ParseMultipartForm(10 << 20)
+
 	file, handler, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, userDomain.Result{
@@ -116,7 +115,6 @@ func UploadFiles(c *gin.Context) {
 	}
 	defer file.Close()
 
-	// Obtener userID y courseID del formulario o parámetros
 	userIDStr := c.PostForm("user_id")
 	userID, err := strconv.ParseInt(userIDStr, 10, 64)
 	if err != nil {
@@ -135,7 +133,6 @@ func UploadFiles(c *gin.Context) {
 		return
 	}
 
-	// Llamar al servicio para guardar el archivo
 	err = userService.UploadFiles(file, handler.Filename, userID, courseID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, userDomain.Result{
@@ -144,7 +141,6 @@ func UploadFiles(c *gin.Context) {
 		return
 	}
 
-	// Responder al cliente que el archivo se subió correctamente
 	c.JSON(http.StatusOK, userDomain.Result{
 		Message: fmt.Sprintf("Archivo subido exitosamente: %s", handler.Filename),
 	})

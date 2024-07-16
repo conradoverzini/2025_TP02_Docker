@@ -143,7 +143,6 @@ func AddComment(userID int64, courseID int64, comment string) error {
 func UploadFiles(file io.Reader, filename string, userID int64, courseID int64) error {
 	filePath := fmt.Sprintf("uploads/%s", filename)
 
-	// Guardar la información del archivo en la base de datos
 	fileRecord := dao.File{
 		User_Id:    userID,
 		Course_Id:  courseID,
@@ -156,14 +155,12 @@ func UploadFiles(file io.Reader, filename string, userID int64, courseID int64) 
 		return fmt.Errorf("error uploading file in DB: %v", err)
 	}
 
-	// Crear un archivo en el directorio uploads
 	destFile, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
 	defer destFile.Close()
 
-	// Copiar el contenido del archivo al archivo de destino
 	_, err = io.Copy(destFile, file)
 	if err != nil {
 		return err

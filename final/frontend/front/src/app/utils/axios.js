@@ -26,6 +26,19 @@ export function getCourses() {
     });
 }
 
+export function getCourseById(courseId) {
+  return axios
+    .get(`http://localhost:8080/courses/${courseId}`)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.error("Hubo un Error en la obtencion del curso:", error);
+      throw error;
+    });
+}
+
+
 export function login(loginRequest) {
   return axios
     .post("http://localhost:8080/users/login", loginRequest)

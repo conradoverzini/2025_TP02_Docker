@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 type CourseProps = {
   id: number;
@@ -27,6 +28,10 @@ const Curso: React.FC<CourseProps> = ({
   handleDelete,
   message,
 }) => {
+  const handleInfoClick = () => {
+    localStorage.setItem('CourseId', id.toString());
+  };
+
   return (
     <div className="max-w-md mx-auto my-8 bg-gray-300 rounded-xl shadow-md overflow-hidden">
       <div className="md:flex">
@@ -53,13 +58,20 @@ const Curso: React.FC<CourseProps> = ({
             {requirement}
           </div>
           <div className="flex justify-center mt-6 space-x-4">
-            {handleSubscribe && message && (
+            {handleSubscribe && message && message === "Inscribirse" && (
               <button
                 onClick={() => handleSubscribe(id)}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
               >
                 {message}
               </button>
+            )}
+            {message && message === "+ Info" && (
+              <Link href={"/courseDetails"} onClick={handleInfoClick}>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                  {message}
+                </button>
+              </Link>
             )}
             {handleUpdate && (
               <button

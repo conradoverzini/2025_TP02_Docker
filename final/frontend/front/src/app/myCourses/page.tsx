@@ -51,14 +51,9 @@ export default function MyCourses() {
       fetchCourses();
   }, [userId]); 
 
-
-  const handleSearchResults = (results: course[]) => {
-    setCourses(results);
-  };
-
   return (
     <div className="w-full min-h-screen bg-gray-800">
-      <Navbar onSearchResults={handleSearchResults} /> 
+      <Navbar onSearchResults={(): void => {}} /> 
       <div className="pt-16 w-full flex flex-col items-center justify-start overflow-y-auto">
         {courses.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

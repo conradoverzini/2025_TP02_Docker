@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # Base de datos de desarrollo
+  db-dev:
+    image: mysql:8.0
+    container_name: db-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: courses_dev
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    ports:
+      - "7000:3306"
+    volumes:
+      - db_dev_data:/var/lib/mysql
+      - ./scripts/init-dev.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dev-network
+
+  # Base de datos de QA
+  db-qa:
+    image: mysql:8.0
+    container_name: db-qa
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: courses_qa
+      MYSQL_USER: qauser
+      MYSQL_PASSWORD: qapass
+    ports:
+      - "7001:3306"
+    volumes:
+      - db_qa_data:/var/lib/mysql
+      - ./scripts/init-qa.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - qa-network
+
+  # Backend de desarrollo
+  backend-dev:
+    build:
+      context: ./final/backend
+      dockerfile: Dockerfile
+    container_name: backend-dev
+    ports:
+      - "5000:8080"
+    environment:
+      - DB_HOST=db-dev
+      - DB_PORT=3306
+      - DB_NAME=courses_dev
+      - DB_USER=devuser
+      - DB_PASSWORD=devpass
+      - ENV=development
+    volumes:
+      - ./final/backend:/app
+      - ./uploads-dev:/app/uploads
+    depends_on:
+      - db-dev
+    networks:
+      - dev-network
+
+  # Backend de QA
+  backend-qa:
+    build:
+      context: ./final/backend
+      dockerfile: Dockerfile
+    container_name: backend-qa
+    ports:
+      - "5001:8080"
+    environment:
+      - DB_HOST=db-qa
+      - DB_PORT=3306
+      - DB_NAME=courses_qa
+      - DB_USER=qauser
+      - DB_PASSWORD=qapass
+      - ENV=qa
+    volumes:
+      - ./final/backend:/app
+      - ./uploads-qa:/app/uploads
+    depends_on:
+      - db-qa
+    networks:
+      - qa-network
+
+  # Frontend de desarrollo
+  frontend-dev:
+    build:
+      context: ./final/frontend/front
+      dockerfile: Dockerfile
+    container_name: frontend-dev
+    ports:
+      - "8080:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - ENV=development
+    volumes:
+      - ./final/frontend/front:/app
+      - /app/node_modules
+    depends_on:
+      - backend-dev
+    networks:
+      - dev-network
+
+  # Frontend de QA
+  frontend-qa:
+    build:
+      context: ./final/frontend/front
+      dockerfile: Dockerfile
+    container_name: frontend-qa
+    ports:
+      - "8081:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5001
+      - ENV=qa
+    volumes:
+      - ./final/frontend/front:/app
+      - /app/node_modules
+    depends_on:
+      - backend-qa
+    networks:
+      - qa-network
+
+volumes:
+  db_dev_data:
+  db_qa_data:
+
+networks:
+  dev-network:
+    driver: bridge
+  qa-network:
+    driver: bridge 

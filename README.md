@@ -47,14 +47,14 @@ chmod +x scripts/*.sh
 ### Ambiente de Desarrollo
 
 - **Frontend**: http://localhost:8080
-- **Backend API**: http://localhost:5000
-- **Base de datos**: localhost:7000
+- **Backend API**: http://localhost:5002
+- **Base de datos**: localhost:7002
 
 ### Ambiente de QA
 
 - **Frontend**: http://localhost:8081
-- **Backend API**: http://localhost:5001
-- **Base de datos**: localhost:7001
+- **Backend API**: http://localhost:5003
+- **Base de datos**: localhost:7003
 
 ## 🔧 Comandos Docker útiles
 

@@ -10,8 +10,8 @@ mkdir -p uploads-qa
 docker-compose up -d db-qa backend-qa frontend-qa
 
 echo "✅ Ambiente de QA iniciado:"
-echo "   📊 Base de datos: localhost:7001"
-echo "   🔧 Backend: localhost:5001"
+echo "   📊 Base de datos: localhost:7003"
+echo "   🔧 Backend: localhost:5003"
 echo "   🌐 Frontend: localhost:8081"
 echo ""
 echo "📋 Comandos útiles:"

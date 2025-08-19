@@ -10,8 +10,8 @@ mkdir -p uploads-qa
 docker-compose up -d db-dev backend-dev frontend-dev
 
 echo "✅ Ambiente de desarrollo iniciado:"
-echo "   📊 Base de datos: localhost:7000"
-echo "   🔧 Backend: localhost:5000"
+echo "   📊 Base de datos: localhost:7002"
+echo "   🔧 Backend: localhost:5002"
 echo "   🌐 Frontend: localhost:8080"
 echo ""
 echo "📋 Comandos útiles:"

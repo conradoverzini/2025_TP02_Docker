@@ -9,6 +9,14 @@ import (
 
 func MapRoutes(engine *gin.Engine) {
 	//funcion que levanta toda la aplicacion
+
+	// Health check endpoint
+	engine.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"status":  "ok",
+			"message": "Backend is running",
+		})
+	})
 	engine.POST("/users/login", users.Login) //primer parametro la url y como segundo la funcion del controlador
 	engine.POST("/users/register", users.UserRegister)
 	engine.GET("/courses/search", courses.SearchCourse)

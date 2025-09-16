@@ -309,3 +309,32 @@ Ayuda con comandos para velocidad del armado de los contenedores.
 Debugg de Cors
 Explicación de conceptos de versionado de imágenes y estrategias de redes en Docker.
 Organización de la documentación de manera que quedara consistente, con subtítulos y listados de ventajas.
+
+
+##EVIDENCIA DE FUNCIONAMIENTO
+
+Frontend 3001:
+![](./images/F3001.png)
+Frontend 3002:
+![](./images/F3002.png)
+Backend 8081:
+![](./images/health-8081.png)
+Ambos Backends:
+![](./images/Backends.png)
+Conexion qa-db:
+![](./images/Conexion_qa-db.png)
+Contenedores:
+![](./images/DockerDesktop.png)
+Terminal qa-db:
+![](./images/qa-db.png)
+Reinicio Codigo:
+![](./images/reinicio.png)
+Reinicio contenedores:
+![](./images/ReinicioContenedores.png)
+Datos persistentes:
+![](./images/Persistentes.png)
+
+
+
+
+

@@ -1,18 +1,16 @@
 import axios from "axios";
 
-// Configuración base de axios con variable de entorno en runtime
+// Configuración base de axios con variable de entorno
 const getApiBaseURL = () => {
-  // En el cliente (browser), usar window.location para determinar el entorno
-  if (typeof window !== "undefined") {
-    const port = window.location.port;
-    if (port === "3001") {
-      return "http://localhost:8081"; // QA
-    } else if (port === "3002") {
-      return "http://localhost:8082"; // PROD
-    }
+  // Usar variable de entorno para la URL del API
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (apiUrl) {
+    return apiUrl;
   }
-  // Fallback para build time o server side
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+  // Fallback para desarrollo local
+  return "http://localhost:8080";
 };
 
 const api = axios.create({

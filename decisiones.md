@@ -44,24 +44,24 @@ Etapa runner: ejecutar solo el binario en una imagen mínima de Alpine con usuar
 ## 3 Publicación de imágenes en Docker Hub
 
 Para este proyecto, se construyeron y publicaron las imágenes de backend y frontend:
-Backend: felipeeguia03/courses-backend:1.0
-Frontend: felipeeguia03/courses-frontend:1.0
+Backend: felipeeguia03/courses-backend:1.1
+Frontend: felipeeguia03/courses-frontend:1.1
 Estas imágenes se subieron a Docker Hub con los siguientes comandos:
 
 # Construcción de imágenes
 
-docker build -t felipeeguia03/courses-backend:1.0 ./backend
-docker build -t felipeeguia03/courses-frontend:1.0 ./frontend
+docker build -t felipeeguia03/courses-backend:1.1 ./final/backend
+docker build -t felipeeguia03/courses-frontend:1.1 ./final/frontend/front
 
 # Subida a Docker Hub
 
-docker push felipeeguia03/courses-backend:1.0
-docker push felipeeguia03/courses-frontend:1.0
+docker push felipeeguia03/courses-backend:1.1
+docker push felipeeguia03/courses-frontend:1.1
 
 ###Estrategia de versionado
 Se utilizó un esquema simple y claro:
-1.0 → primera versión estable del proyecto.
-Futuras versiones se pueden numerar como 1.1, 1.2, etc.
+1.1 → versión actual estable del proyecto.
+Futuras versiones se pueden numerar como 1.2, 1.3, etc.
 Se puede usar latest para apuntar siempre a la versión más reciente en Docker Hub.
 Ventajas:
 QA y PROD pueden usar la misma imagen, cambiando únicamente variables de entorno y puertos, evitando inconsistencias.
@@ -118,7 +118,7 @@ Cada entorno tiene su propia configuración:
 # Backend QA
 
 backend-qa:
-image: felipeeguia03/courses-backend:1.0
+image: felipeeguia03/courses-backend:1.1
 environment:
 DB_HOST: db-qa
 DB_PORT: 3306
@@ -131,7 +131,7 @@ ports: - "8081:8080"
 # Backend PROD
 
 backend-prod:
-image: felipeeguia03/courses-backend:1.0
+image: felipeeguia03/courses-backend:1.1
 environment:
 DB_HOST: db-prod
 DB_PORT: 3306
@@ -148,21 +148,13 @@ El frontend se conecta al backend correspondiente según el entorno:
 # Frontend QA
 
 frontend-qa:
-build:
-context: ./final/frontend/front
-dockerfile: Dockerfile
-args:
-NEXT_PUBLIC_API_URL: http://localhost:8081
+image: felipeeguia03/courses-frontend:1.1
 ports: - "3001:3000"
 
 # Frontend PROD
 
 frontend-prod:
-build:
-context: ./final/frontend/front
-dockerfile: Dockerfile
-args:
-NEXT_PUBLIC_API_URL: http://localhost:8082
+image: felipeeguia03/courses-frontend:1.1
 ports: - "3002:3000"
 5.4 Ejecución simultánea
 Podemos levantar ambos entornos con:
@@ -244,10 +236,10 @@ docker network ls # verificar redes
 ### 7. Crear una versión etiquetada
 
 7.1 Estrategia de versionado
-Para el proyecto decidimos usar una versión estable para la imagen del backend, siguiendo un esquema de versionado simple y claro: v1.0.
+Para el proyecto decidimos usar una versión estable para la imagen del backend, siguiendo un esquema de versionado simple y claro: v1.1.
 La idea es que esta versión siempre apunte al mismo código, asegurando que QA y PROD estén corriendo exactamente lo mismo.
 Ventajas de esta estrategia:
-La versión v1.0 es inmutable: no cambia aunque se haga un nuevo build.
+La versión v1.1 es inmutable: no cambia aunque se haga un nuevo build.
 Facilita hacer rollback a versiones anteriores si surge un problema.
 Permite reproducir el entorno exactamente igual en cualquier máquina.
 Garantiza consistencia entre QA y PROD, evitando sorpresas.
@@ -256,33 +248,33 @@ Pasos realizados:
 
 # 1. Construir la imagen del backend
 
-docker build -t felipeeguia03/courses-backend:1.0 ./final/backend
+docker build -t felipeeguia03/courses-backend:1.1 ./final/backend
 
 # 2. Etiquetarla con versión semántica
 
-docker tag felipeeguia03/courses-backend:1.0 felipeeguia03/courses-backend:v1.0
+docker tag felipeeguia03/courses-backend:1.1 felipeeguia03/courses-backend:v1.1
 
 # 3. Subirla a Docker Hub
 
-docker push felipeeguia03/courses-backend:1.0
-docker push felipeeguia03/courses-backend:v1.0
-Con esto, la misma imagen quedó disponible en Docker Hub con dos tags: 1.0 y v1.0. Ambos apuntan al mismo artefacto.
+docker push felipeeguia03/courses-backend:1.1
+docker push felipeeguia03/courses-backend:v1.1
+Con esto, la misma imagen quedó disponible en Docker Hub con dos tags: 1.1 y v1.1. Ambos apuntan al mismo artefacto.
 7.3 Uso de la versión en docker-compose
 En el docker-compose.yml actual, tanto QA como PROD usan esta misma versión:
 backend-qa:
-image: felipeeguia03/courses-backend:v1.0
+image: felipeeguia03/courses-backend:1.1
 
 # resto de configuración...
 
 backend-prod:
-image: felipeeguia03/courses-backend:v1.0
+image: felipeeguia03/courses-backend:1.1
 
 # resto de configuración...
 
 Esto asegura que ambos entornos ejecuten exactamente la misma imagen, sin depender de latest ni builds locales.
 7.4 Cómo manejar futuras versiones
 Para nuevas funcionalidades o correcciones, se seguiría esta lógica:
-Versiones menores: v1.1, v1.2 → cambios que no rompen compatibilidad.
+Versiones menores: v1.2, v1.3 → cambios que no rompen compatibilidad.
 Versiones mayores: v2.0 → cambios importantes o que modifican la estructura de la base de datos.
 Siempre construir, etiquetar y pushear la nueva versión antes de actualizar docker-compose.yml.
 7.5 Verificación de versiones
@@ -308,7 +300,7 @@ Desarrollé todo el backend y frontend en Go y React. El año pasado
 Armé los Dockerfiles para backend y frontend, asegurando que compilara correctamente.
 Configuré docker-compose.yml con las bases de datos, backends y frontends para QA y PROD.
 Probamos localmente que los contenedores se conectaran correctamente entre sí y con la base de datos aún cuando hubo errores de configuración como que quería conectar a MARIADB debido a la configuración de Alpine
-Hicimos push de las imágenes a Docker Hub y etiquetamos la versión v1.0.
+Hicimos push de las imágenes a Docker Hub y etiquetamos la versión v1.1.
 Comprobamos que los logs de los contenedores fueran correctos y que los servicios estuvieran funcionando en los puertos configurados con docker desktop
 Realizmos la integración de variables de entorno para diferenciar QA y PROD.
 Lo que hizo Chatgpt y Cursor:

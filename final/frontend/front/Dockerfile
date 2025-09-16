@@ -13,9 +13,7 @@ RUN npm ci
 # Copiar código fuente
 COPY . .
 
-# No necesitamos argumentos de build ya que usamos runtime detection
-
-# Construir la aplicación
+# Construir la aplicación (las variables de entorno se inyectan en runtime)
 RUN npm run build
 
 # Etapa de producción

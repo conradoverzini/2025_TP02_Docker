@@ -2,6 +2,7 @@ package clients
 
 import (
 	"fmt"
+	"os"
 
 	"backend/dao"
 
@@ -20,10 +21,10 @@ var (
 
 func init() {
 	// DB Connections Parameters
-	dbName := "final"     //Nombre de la base de datos local
-	dbUser := "root"      //Usuario de la base de datos, habitualmente root
-	dbPassword := ""      //Password del root en la instalacion
-	dbHost := "localhost" //Host de la base de datos. Habitualmente 127.0.0.1
+	dbName := getEnv("DB_NAME", "final")
+	dbUser := getEnv("DB_USER", "root")
+	dbPassword := getEnv("DB_PASSWORD", "")
+	dbHost := getEnv("DB_HOST", "localhost")
 	dbPort := 3306
 
 	connection := fmt.Sprintf(connectionString, dbUser, dbPassword, dbHost, dbPort, dbName)
@@ -33,6 +34,13 @@ func init() {
 		panic(fmt.Errorf("error connecting to DB: %v", err))
 	}
 	DBClient = db
+}
+
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
 }
 
 func StartDB() {

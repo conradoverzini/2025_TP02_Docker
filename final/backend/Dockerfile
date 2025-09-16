@@ -1,49 +1,51 @@
+# ==========================
 # Etapa de construcción
-FROM golang:1.22-alpine AS builder
+# ==========================
+FROM golang:1.24-alpine AS builder
 
-# Instalar dependencias del sistema
+# Instalar dependencias necesarias
 RUN apk add --no-cache git
 
-# Establecer directorio de trabajo
+# Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
+# Copiar go.mod y go.sum para cache de dependencias
 COPY go.mod go.sum ./
 
 # Descargar dependencias
 RUN go mod download
 
-# Copiar código fuente
+# Copiar el resto del código (incluyendo wait-for-db.sh)
 COPY . .
 
-# Construir la aplicación
+# Compilar la aplicación
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
+# ==========================
 # Etapa de ejecución
+# ==========================
 FROM alpine:latest
 
-# Instalar ca-certificates para HTTPS
-RUN apk --no-cache add ca-certificates
+# Instalar dependencias necesarias para runtime
+RUN apk --no-cache add ca-certificates mysql-client bash
 
-# Crear usuario no-root
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup
-
-# Establecer directorio de trabajo
+# Crear directorio de trabajo
 WORKDIR /app
 
 # Copiar el binario desde la etapa de construcción
-COPY --from=builder /app/main .
+COPY --from=builder /app/main /app/main
+
+# Copiar el script wait-for-db desde la etapa de construcción
+COPY --from=builder /app/wait-for-db.sh /app/wait-for-db.sh
+
+# Dar permisos de ejecución al script
+RUN chmod +x /app/wait-for-db.sh
 
 # Crear directorio de uploads
-RUN mkdir -p /app/uploads && \
-    chown -R appuser:appgroup /app
+RUN mkdir -p /app/uploads
 
-# Cambiar al usuario no-root
-USER appuser
-
-# Exponer puerto
+# Exponer el puerto
 EXPOSE 8080
 
-# Comando de ejecución
-CMD ["./main"] 
+# Comando por defecto
+CMD ["/app/main"]

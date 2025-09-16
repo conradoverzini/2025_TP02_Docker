@@ -1,9 +1,14 @@
 import axios from "axios";
 
+// Configuración base de axios con variable de entorno
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080",
+});
+
 export function search(query) {
-  return axios
-    .get("http://localhost:8080/courses/search", {
-      params: { query: query }, 
+  return api
+    .get("/courses/search", {
+      params: { query: query },
     })
     .then(function (response) {
       return response.data;
@@ -15,8 +20,8 @@ export function search(query) {
 }
 
 export function getCourses() {
-  return axios
-    .get("http://localhost:8080/courses")
+  return api
+    .get("/courses")
     .then(function (response) {
       return response.data.results;
     })
@@ -27,8 +32,8 @@ export function getCourses() {
 }
 
 export function getCourseById(courseId) {
-  return axios
-    .get(`http://localhost:8080/courses/${courseId}`)
+  return api
+    .get(`/courses/${courseId}`)
     .then(function (response) {
       return response.data;
     })
@@ -38,17 +43,16 @@ export function getCourseById(courseId) {
     });
 }
 
-
 export function login(loginRequest) {
-  return axios
-    .post("http://localhost:8080/users/login", loginRequest)
+  return api
+    .post("/users/login", loginRequest)
     .then(function (loginResponse) {
-      console.log("Token: ", loginResponse.data.token); 
+      console.log("Token: ", loginResponse.data.token);
       const tokenType = loginResponse.data.token;
       const tokenId = loginResponse.data.token;
-      localStorage.setItem('tokenType', tokenType);
-      localStorage.setItem('tokenId', tokenId); 
-      return loginResponse.data.token; 
+      localStorage.setItem("tokenType", tokenType);
+      localStorage.setItem("tokenId", tokenId);
+      return loginResponse.data.token;
     })
     .catch(function (error) {
       console.log("Hubo un Error en el logueo:", error);
@@ -57,8 +61,8 @@ export function login(loginRequest) {
 }
 
 export function registration(registrationRequest) {
-  return axios
-    .post("http://localhost:8080/users/register", registrationRequest)
+  return api
+    .post("/users/register", registrationRequest)
     .then(function (registrationResponse) {
       console.log("Token: ", registrationResponse.data);
       return registrationResponse.data;
@@ -70,8 +74,8 @@ export function registration(registrationRequest) {
 }
 
 export function subscribe(subscribeRequest) {
-  return axios
-    .post("http://localhost:8080/subscriptions", subscribeRequest)
+  return api
+    .post("/subscriptions", subscribeRequest)
     .then(function (result) {
       console.log("Resultado de la subscripcion: ", result.data);
       return result.data;
@@ -82,11 +86,9 @@ export function subscribe(subscribeRequest) {
     });
 }
 
-
-
 export function subscriptionList(userId) {
-  return axios
-    .get(`http://localhost:8080/users/subscriptions/${userId}`)
+  return api
+    .get(`/users/subscriptions/${userId}`)
     .then(function (listResponse) {
       return listResponse.data.results;
     })
@@ -97,9 +99,9 @@ export function subscriptionList(userId) {
 }
 
 export function userAuthentication(token) {
-  return axios
-    .get("http://localhost:8080/users/authentication", {
-      headers: { Authorization: `Bearer ${token}` }
+  return api
+    .get("/users/authentication", {
+      headers: { Authorization: `Bearer ${token}` },
     })
     .then(function (response) {
       return response.data.message;
@@ -111,9 +113,9 @@ export function userAuthentication(token) {
 }
 
 export function getUserId(token) {
-  return axios
-    .get("http://localhost:8080/users/userId", {
-      headers: { Authorization: `Bearer ${token}` }
+  return api
+    .get("/users/userId", {
+      headers: { Authorization: `Bearer ${token}` },
     })
     .then(function (response) {
       return response.data.message;
@@ -125,60 +127,60 @@ export function getUserId(token) {
 }
 
 export function createCourse(courseRequest) {
-  return axios
-  .post("http://localhost:8080/courses/create", courseRequest)
-  .then(function (result) {
-    console.log("Resultado de la creacion del curso: ", result.data);
-    return result.data;
-  })
-  .catch(function (error) {
-    console.log("Hubo un Error en la creacion:", error);
-    throw error;
-  });
+  return api
+    .post("/courses/create", courseRequest)
+    .then(function (result) {
+      console.log("Resultado de la creacion del curso: ", result.data);
+      return result.data;
+    })
+    .catch(function (error) {
+      console.log("Hubo un Error en la creacion:", error);
+      throw error;
+    });
 }
 
 export function deleteCourse(courseId) {
-  return axios
-  .delete(`http://localhost:8080/courses/delete/${courseId}`)
-  .then(function (result) {
-    console.log("Resultado de la eliminacion del curso: ", result.data);
-    return result.data;
-  })
-  .catch(function (error) {
-    console.log("Hubo un Error en la eliminacion:", error);
-    throw error;
-  });
+  return api
+    .delete(`/courses/delete/${courseId}`)
+    .then(function (result) {
+      console.log("Resultado de la eliminacion del curso: ", result.data);
+      return result.data;
+    })
+    .catch(function (error) {
+      console.log("Hubo un Error en la eliminacion:", error);
+      throw error;
+    });
 }
 
 export function updateCourse(courseId, updateRequest) {
-  return axios
-  .put(`http://localhost:8080/courses/update/${courseId}`, updateRequest)
-  .then(function (result) {
-    console.log("Resultado de la actualizacion del curso: ", result.data);
-    return result.data;
-  })
-  .catch(function (error) {
-    console.log("Hubo un Error en la actualizacion:", error);
-    throw error;
-  });
+  return api
+    .put(`/courses/update/${courseId}`, updateRequest)
+    .then(function (result) {
+      console.log("Resultado de la actualizacion del curso: ", result.data);
+      return result.data;
+    })
+    .catch(function (error) {
+      console.log("Hubo un Error en la actualizacion:", error);
+      throw error;
+    });
 }
 
 export function addComment(commentRequest) {
-  return axios
-  .post("http://localhost:8080/users/comments", commentRequest)
-  .then(function (result) {
-    console.log("Resultado del comentario: ", result.data);
-    return result.data;
-  })
-  .catch(function (error) {
-    console.log("Hubo un Error en en el comentado:", error);
-    throw error;
-  });
+  return api
+    .post("/users/comments", commentRequest)
+    .then(function (result) {
+      console.log("Resultado del comentario: ", result.data);
+      return result.data;
+    })
+    .catch(function (error) {
+      console.log("Hubo un Error en en el comentado:", error);
+      throw error;
+    });
 }
 
 export function commentsList(courseId) {
-  return axios
-    .get(`http://localhost:8080/courses/comments/${courseId}`)
+  return api
+    .get(`/courses/comments/${courseId}`)
     .then(function (commentList) {
       return commentList.data.results;
     })
@@ -190,15 +192,15 @@ export function commentsList(courseId) {
 
 export function uploadFile(file, userId, courseId) {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('user_id', userId);
-  formData.append('course_id', courseId);
+  formData.append("file", file);
+  formData.append("user_id", userId);
+  formData.append("course_id", courseId);
 
-  return axios
-    .post("http://localhost:8080/upload", formData, {
+  return api
+    .post("/upload", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     })
     .then(function (result) {
       console.log("Resultado de la subida del archivo: ", result.data);

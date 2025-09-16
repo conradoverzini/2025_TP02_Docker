@@ -1,130 +1,119 @@
-version: '3.8'
 
+# docker-compose.yml
 services:
-  # Base de datos de desarrollo
-  db-dev:
-    image: mysql:8.0
-    container_name: db-dev
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: courses_dev
-      MYSQL_USER: devuser
-      MYSQL_PASSWORD: devpass
-    ports:
-      - "7002:3306"
-    volumes:
-      - db_dev_data:/var/lib/mysql
-      - ./scripts/init-dev.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - dev-network
-
-  # Base de datos de QA
+  # -----------------------------
+  # Bases de datos
+  # -----------------------------
   db-qa:
-    image: mysql:8.0
+    image: mysql:8
     container_name: db-qa
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: courses_qa
       MYSQL_USER: qauser
       MYSQL_PASSWORD: qapass
     ports:
-      - "7003:3306"
+      - "3307:3306"
     volumes:
-      - db_qa_data:/var/lib/mysql
-      - ./scripts/init-qa.sql:/docker-entrypoint-initdb.d/init.sql
+      - db-qa-data:/var/lib/mysql
     networks:
-      - qa-network
+      - qa-net
 
-  # Backend de desarrollo
-  backend-dev:
-    build:
-      context: ./final/backend
-      dockerfile: Dockerfile
-    container_name: backend-dev
-    ports:
-      - "5002:8080"
+  db-prod:
+    image: mysql:8
+    container_name: db-prod
     environment:
-      - DB_HOST=db-dev
-      - DB_PORT=3306
-      - DB_NAME=courses_dev
-      - DB_USER=devuser
-      - DB_PASSWORD=devpass
-      - ENV=development
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: courses_prod
+      MYSQL_USER: produser
+      MYSQL_PASSWORD: prodpass
+    ports:
+      - "3308:3306"
     volumes:
-      - ./final/backend:/app
-      - ./uploads-dev:/app/uploads
-    depends_on:
-      - db-dev
+      - db-prod-data:/var/lib/mysql
     networks:
-      - dev-network
+      - prod-net
 
-  # Backend de QA
+  # -----------------------------
+  # Backend
+  # -----------------------------
   backend-qa:
-    build:
-      context: ./final/backend
-      dockerfile: Dockerfile
+    image: felipeeguia03/courses-backend:1.0
     container_name: backend-qa
-    ports:
-      - "5003:8080"
-    environment:
-      - DB_HOST=db-qa
-      - DB_PORT=3306
-      - DB_NAME=courses_qa
-      - DB_USER=qauser
-      - DB_PASSWORD=qapass
-      - ENV=qa
-    volumes:
-      - ./final/backend:/app
-      - ./uploads-qa:/app/uploads
     depends_on:
       - db-qa
-    networks:
-      - qa-network
-
-  # Frontend de desarrollo
-  frontend-dev:
-    build:
-      context: ./final/frontend/front
-      dockerfile: Dockerfile
-    container_name: frontend-dev
-    ports:
-      - "8080:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:5000
-      - ENV=development
-    volumes:
-      - ./final/frontend/front:/app
-      - /app/node_modules
-    depends_on:
-      - backend-dev
+      DB_HOST: db-qa
+      DB_PORT: 3306
+      DB_USER: qauser
+      DB_PASSWORD: qapass
+      DB_NAME: courses_qa
+      ENV: qa
+    entrypoint: ["/app/wait-for-db.sh", "db-qa", "/app/main"]
+    ports:
+      - "8081:8080"
     networks:
-      - dev-network
+      - qa-net
 
-  # Frontend de QA
+  backend-prod:
+    image: felipeeguia03/courses-backend:1.0
+    container_name: backend-prod
+    depends_on:
+      - db-prod
+    environment:
+      DB_HOST: db-prod
+      DB_PORT: 3306
+      DB_USER: produser
+      DB_PASSWORD: prodpass
+      DB_NAME: courses_prod
+      ENV: production
+    entrypoint: ["/app/wait-for-db.sh", "db-prod", "/app/main"]
+    ports:
+      - "8082:8080"
+    networks:
+      - prod-net
+
+  # -----------------------------
+  # Frontend
+  # -----------------------------
   frontend-qa:
     build:
       context: ./final/frontend/front
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8081
     container_name: frontend-qa
     ports:
-      - "8081:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:5001
-      - ENV=qa
-    volumes:
-      - ./final/frontend/front:/app
-      - /app/node_modules
+      - "3001:3000"
     depends_on:
       - backend-qa
     networks:
-      - qa-network
+      - qa-net
 
+  frontend-prod:
+    build:
+      context: ./final/frontend/front
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8082
+    container_name: frontend-prod
+    ports:
+      - "3002:3000"
+    depends_on:
+      - backend-prod
+    networks:
+      - prod-net
+
+# -----------------------------
+# Volúmenes persistentes
+# -----------------------------
 volumes:
-  db_dev_data:
-  db_qa_data:
+  db-qa-data:
+  db-prod-data:
 
+# -----------------------------
+# Redes
+# -----------------------------
 networks:
-  dev-network:
-    driver: bridge
-  qa-network:
-    driver: bridge 
+  qa-net:
+  prod-net:

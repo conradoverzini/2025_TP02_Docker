@@ -13,6 +13,10 @@ RUN npm ci
 # Copiar código fuente
 COPY . .
 
+# Argumentos de build para variables de entorno
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Construir la aplicación
 RUN npm run build
 

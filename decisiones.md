@@ -242,6 +242,7 @@ docker network ls # verificar redes
 ✅ Mantenimiento: todo centralizado en docker-compose.yml
 
 ### 7. Crear una versión etiquetada
+
 7.1 Estrategia de versionado
 Para el proyecto decidimos usar una versión estable para la imagen del backend, siguiendo un esquema de versionado simple y claro: v1.0.
 La idea es que esta versión siempre apunte al mismo código, asegurando que QA y PROD estén corriendo exactamente lo mismo.
@@ -252,25 +253,32 @@ Permite reproducir el entorno exactamente igual en cualquier máquina.
 Garantiza consistencia entre QA y PROD, evitando sorpresas.
 7.2 Cómo se creó y publicó la versión
 Pasos realizados:
+
 # 1. Construir la imagen del backend
+
 docker build -t felipeeguia03/courses-backend:1.0 ./final/backend
 
 # 2. Etiquetarla con versión semántica
+
 docker tag felipeeguia03/courses-backend:1.0 felipeeguia03/courses-backend:v1.0
 
 # 3. Subirla a Docker Hub
+
 docker push felipeeguia03/courses-backend:1.0
 docker push felipeeguia03/courses-backend:v1.0
 Con esto, la misma imagen quedó disponible en Docker Hub con dos tags: 1.0 y v1.0. Ambos apuntan al mismo artefacto.
 7.3 Uso de la versión en docker-compose
 En el docker-compose.yml actual, tanto QA como PROD usan esta misma versión:
 backend-qa:
-  image: felipeeguia03/courses-backend:v1.0
-  # resto de configuración...
+image: felipeeguia03/courses-backend:v1.0
+
+# resto de configuración...
 
 backend-prod:
-  image: felipeeguia03/courses-backend:v1.0
-  # resto de configuración...
+image: felipeeguia03/courses-backend:v1.0
+
+# resto de configuración...
+
 Esto asegura que ambos entornos ejecuten exactamente la misma imagen, sin depender de latest ni builds locales.
 7.4 Cómo manejar futuras versiones
 Para nuevas funcionalidades o correcciones, se seguiría esta lógica:
@@ -279,15 +287,16 @@ Versiones mayores: v2.0 → cambios importantes o que modifican la estructura de
 Siempre construir, etiquetar y pushear la nueva versión antes de actualizar docker-compose.yml.
 7.5 Verificación de versiones
 Para chequear que los contenedores están usando la versión correcta:
+
 # Ver imágenes locales
+
 docker images felipeeguia03/courses-backend
 
 # Ver la imagen usada por un contenedor
+
 docker inspect backend-qa | grep Image
 docker inspect backend-prod | grep Image
 De esta manera, confirmamos que QA y PROD están corriendo la versión exacta que queremos.
-
-
 
 ## DECLARACION USO DE IA
 
@@ -309,7 +318,6 @@ Ayuda con comandos para velocidad del armado de los contenedores.
 Debugg de Cors
 Explicación de conceptos de versionado de imágenes y estrategias de redes en Docker.
 Organización de la documentación de manera que quedara consistente, con subtítulos y listados de ventajas.
-
 
 ##EVIDENCIA DE FUNCIONAMIENTO
 
@@ -333,8 +341,3 @@ Reinicio contenedores:
 ![](./images/ReinicioContenedores.png)
 Datos persistentes:
 ![](./images/Persistentes.png)
-
-
-
-
-

@@ -1,9 +1,7 @@
 
-# docker-compose.yml
+
 services:
-  # -----------------------------
-  # Bases de datos
-  # -----------------------------
+
   db-qa:
     image: mysql:8
     container_name: db-qa
@@ -34,9 +32,6 @@ services:
     networks:
       - prod-net
 
-  # -----------------------------
-  # Backend
-  # -----------------------------
   backend-qa:
     image: felipeeguia03/courses-backend:1.1
     container_name: backend-qa
@@ -73,9 +68,6 @@ services:
     networks:
       - prod-net
 
-  # -----------------------------
-  # Frontend
-  # -----------------------------
   frontend-qa:
     image: felipeeguia03/courses-frontend:1.1
     container_name: frontend-qa
@@ -102,16 +94,10 @@ services:
     networks:
       - prod-net
 
-# -----------------------------
-# Volúmenes persistentes
-# -----------------------------
 volumes:
   db-qa-data:
   db-prod-data:
 
-# -----------------------------
-# Redes
-# -----------------------------
 networks:
   qa-net:
   prod-net:

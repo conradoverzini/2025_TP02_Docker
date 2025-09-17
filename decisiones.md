@@ -7,7 +7,6 @@ El repositorio original se encuentra en:
 [https://github.com/conradoverzini/2025_TP02_Docker](https://github.com/conradoverzini/2025_TP02_Docker)
 
 Elegimos esta aplicación porque ya tiene una base sólida de código, lo que nos permitió enfocarnos en aprender Docker y la containerización en lugar de empezar un proyecto desde cero.  
-Además, mantener el historial de commits es útil para ver la evolución del proyecto.
 
 Para cumplir con la consigna de tener un repositorio propio, realicé un FORK del repositorio original.  
 Mi copia del repositorio está en:  

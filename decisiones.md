@@ -19,7 +19,7 @@ git remote set-url origin https://github.com/felipeeguia03/2025_TP02_Docker.git
 
 ## 2. Construir una imagen personalizada
 
-##2.1 Separación Frontend / Backend
+##2.1. Separación Frontend / Backend
 Decidimos crear dos Dockerfiles, uno para el frontend (Next.js / React) y otro para el backend (Go), siguiendo las buenas prácticas de Docker:
 Separación de responsabilidades: cada contenedor hace una sola cosa.
 Escalabilidad: permite levantar varios contenedores de backend sin afectar el frontend.

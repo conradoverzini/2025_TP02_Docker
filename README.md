@@ -1,11 +1,11 @@
 # TP_02_Docker
 
 ## Construir las Imágenes
-docker-compose build
+- docker-compose build
 
 # Construir imagen específica
-docker build -t felipeeguia03/courses-backend:1.1 ./final/backend
-docker build -t felipeeguia03/courses-frontend:1.1 ./final/frontend/front
+- docker build -t felipeeguia03/courses-backend:1.1 ./final/backend
+- docker build -t felipeeguia03/courses-frontend:1.1 ./final/frontend/front
 ```
 
 ## Ejecutar los Contenedores
@@ -34,24 +34,24 @@ docker-compose up -d db-prod backend-prod frontend-prod
 
 ## Conectarse a la Base de Datos
 # QA
-mysql -h localhost -P 3307 -u qauser -pqapass courses_qa
+- mysql -h localhost -P 3307 -u qauser -pqapass courses_qa
 
 # Producción
-mysql -h localhost -P 3308 -u produser -pprodpass courses_prod
+- mysql -h localhost -P 3308 -u produser -pprodpass courses_prod
 
 # Root access
-mysql -h localhost -P 3307 -u root -prootpass
-mysql -h localhost -P 3308 -u root -prootpass
-```
+- mysql -h localhost -P 3307 -u root -prootpass
+- mysql -h localhost -P 3308 -u root -prootpass
+
 
 ## Verificar que Todo Funciona
 
-docker-compose ps
-docker-compose logs -f
+- docker-compose ps
+- docker-compose logs -f
 
 # Health checks
-curl http://localhost:8081/health
-curl http://localhost:8082/health
+- curl http://localhost:8081/health
+- curl http://localhost:8082/health
 
 # Verificar BD
 docker exec -it db-qa mysql -u qauser -pqapass -e "SHOW DATABASES;"
